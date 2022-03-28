@@ -9,8 +9,11 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/strategies/jwt/jwt-auth.guard';
+import { AdminGuard } from 'src/movies/guards/admin.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
@@ -31,18 +34,21 @@ export class UsersController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param('id') id: number) {
     return this.usersService.delete(id);

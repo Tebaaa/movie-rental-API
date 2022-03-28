@@ -41,4 +41,9 @@ export class UsersService {
     const user = await this.findById(id);
     return this.userRepository.remove(user);
   }
+  async findByUsername(username: string) {
+    const user = await this.userRepository.findOne({ username: username });
+    if (!user) throw new NotFoundException(`Username doesn't exist`);
+    return user;
+  }
 }

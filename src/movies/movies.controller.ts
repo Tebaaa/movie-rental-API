@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -35,7 +37,8 @@ export class MoviesController {
     return this.moviesService.update(id, updateMovieDto);
   }
 
-  @Delete('id')
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param('id') id: number) {
     return this.moviesService.delete(id);
   }

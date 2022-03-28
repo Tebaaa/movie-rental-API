@@ -16,7 +16,7 @@ export class MoviesService {
     private readonly movieRepository: Repository<MovieEntity>,
   ) {}
   findAll() {
-    return this.movieRepository.find();
+    return this.movieRepository.find({ order: { title: 'ASC' } });
   }
   async findById(id: number) {
     const movie = await this.movieRepository.findOne(id);

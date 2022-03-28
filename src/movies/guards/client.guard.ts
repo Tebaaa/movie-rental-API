@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { RoleChecker } from './roleChecker';
 
 @Injectable()
-export class AdminGuard implements CanActivate {
+export class ClientGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {

@@ -1,4 +1,10 @@
-import { IsBoolean, IsNumber, IsString, IsUrl } from 'class-validator';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+} from 'class-validator';
 
 export class CreateMovieDto {
   @IsString()
@@ -29,5 +35,6 @@ export class CreateMovieDto {
   readonly available: boolean;
 
   @IsString({ each: true })
-  readonly tags: string[];
+  @IsOptional()
+  readonly tags?: string[];
 }

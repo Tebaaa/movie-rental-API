@@ -68,4 +68,29 @@ describe('RentalServices', () => {
       });
     });
   });
+
+  describe('rent', () => {
+    const movieId = 1;
+    describe('when stock is not 0 and is available', () => {
+      it('should return an updated movie', async () => {
+        const expectedMovie = { stock: 2, available: true };
+        mockMovieService.findById.mockReturnValue(expectedMovie);
+        mockMovieService.update.mockReturnValue(expectedMovie);
+        const movie = await service.rent(movieId);
+        expect(movie).toEqual(expectedMovie);
+      });
+    });
+    describe('otherwise', () => {
+      it('should throw a ConflictException', async () => {
+        const returnedMovie = { stock: 0, available: false };
+        mockMovieService.findById.mockReturnValue(returnedMovie);
+        try {
+          await service.rent(movieId);
+        } catch (err) {
+          expect(err).toBeInstanceOf(ConflictException);
+          expect(err.message).toEqual('No stock available');
+        }
+      });
+    });
+  });
 });

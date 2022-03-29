@@ -144,4 +144,27 @@ describe('UsersService', () => {
       });
     });
   });
+
+  describe('findByUsername', () => {
+    const username = 'username';
+    describe('when username exists', () => {
+      it('should return a user object', async () => {
+        const expectedUser = {};
+        usersRepository.findOne.mockReturnValue(expectedUser);
+        const user = await service.findByUsername(username);
+        expect(user).toEqual(expectedUser);
+      });
+    });
+    describe('otherwise', () => {
+      it('should throw a NotFoundException', async () => {
+        usersRepository.findOne.mockReturnValue(undefined);
+        try {
+          await service.findByUsername(username);
+        } catch (err) {
+          expect(err).toBeInstanceOf(NotFoundException);
+          expect(err.message).toEqual(`Username doesn't exist`);
+        }
+      });
+    });
+  });
 });

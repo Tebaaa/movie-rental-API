@@ -1,7 +1,8 @@
-import { NotFoundException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
+import { CreateUserDto } from '../dto/create-user.dto';
 import { User } from '../entities/users.entity';
 import { UsersService } from '../users.service';
 
@@ -12,6 +13,7 @@ const createMockRepository = <T = any>(): MockRepository<T> => ({
   delete: jest.fn(),
   find: jest.fn(),
   preload: jest.fn(),
+  save: jest.fn(),
 });
 
 describe('UsersService', () => {
@@ -62,6 +64,31 @@ describe('UsersService', () => {
         } catch (error) {
           expect(error).toBeInstanceOf(NotFoundException);
           expect(error.message).toEqual(`User #${userId} not found`);
+        }
+      });
+    });
+  });
+
+  describe('update', () => {
+    const userId = 1;
+    const updateUser = { username: 'username' };
+    describe('when user with id exists', () => {
+      it('should return an updated user', async () => {
+        const expectedSavedUser = {};
+        usersRepository.preload.mockReturnValue(expectedSavedUser);
+        usersRepository.save.mockReturnValue(expectedSavedUser);
+        const savedUser = await service.update(userId, updateUser);
+        expect(savedUser).toEqual(expectedSavedUser);
+      });
+    });
+    describe('otherwhise', () => {
+      it('should throw a NotFoundException', async () => {
+        try {
+          usersRepository.preload.mockReturnValue(undefined);
+          await service.update(userId, updateUser);
+        } catch (err) {
+          expect(err).toBeInstanceOf(NotFoundException);
+          expect(err.message).toEqual(`User #${userId} not found`);
         }
       });
     });

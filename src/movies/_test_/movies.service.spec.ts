@@ -101,4 +101,29 @@ describe('MoviesService', () => {
       });
     });
   });
+
+  describe('update', () => {
+    const movieId = 1;
+    const updateMovieDto = { title: 'new title' };
+    describe('when movie with ID exists', () => {
+      it('should return an updated movie object', async () => {
+        const expectedMovie = {};
+        moviesRepository.preload.mockReturnValue(expectedMovie);
+        moviesRepository.save.mockReturnValue(expectedMovie);
+        const movie = await service.update(movieId, updateMovieDto);
+        expect(movie).toEqual(expectedMovie);
+      });
+    });
+    describe('otherwise', () => {
+      it('should throw a NotFoundException', async () => {
+        moviesRepository.preload.mockReturnValue(undefined);
+        try {
+          await service.update(movieId, updateMovieDto);
+        } catch (err) {
+          expect(err).toBeInstanceOf(NotFoundException);
+          expect(err.message).toEqual(`Movie #${movieId} not found`);
+        }
+      });
+    });
+  });
 });

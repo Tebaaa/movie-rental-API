@@ -33,6 +33,16 @@ describe('UsersService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  describe('findAll', () => {
+    it('should return a list of users', () => {
+      const expectedList = {};
+      usersRepository.find.mockReturnValue(expectedList);
+      const list = service.findAll();
+      expect(list).toEqual(expectedList);
+    });
+  });
+
   describe('findById', () => {
     describe('when user with Id exists', () => {
       it('should return the user object', async () => {

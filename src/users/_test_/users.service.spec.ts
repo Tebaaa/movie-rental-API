@@ -2,7 +2,6 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
-import { CreateUserDto } from '../dto/create-user.dto';
 import { User } from '../entities/users.entity';
 import { UsersService } from '../users.service';
 
@@ -64,6 +63,34 @@ describe('UsersService', () => {
         } catch (error) {
           expect(error).toBeInstanceOf(NotFoundException);
           expect(error.message).toEqual(`User #${userId} not found`);
+        }
+      });
+    });
+  });
+
+  describe('create', () => {
+    const createUserDto = {
+      username: 'admin',
+      password: '123',
+      role: 'admin',
+    };
+    const expectedCreatedUser = {};
+    describe('if username has not been used', () => {
+      it('should return a saved user object', async () => {
+        usersRepository.create.mockReturnValue(expectedCreatedUser);
+        usersRepository.save.mockReturnValue(expectedCreatedUser);
+        const createdUser = await service.create(createUserDto);
+        expect(createdUser).toEqual(expectedCreatedUser);
+      });
+    });
+    describe('otherwhise', () => {
+      it('should throw a ConflictException', async () => {
+        try {
+          usersRepository.findOne.mockReturnValue(createUserDto);
+          await service.create(createUserDto);
+        } catch (err) {
+          expect(err).toBeInstanceOf(ConflictException);
+          expect(err.message).toEqual('Username has already been taken ');
         }
       });
     });

@@ -1,18 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Connection } from 'typeorm';
-import {
-  createMockRepository,
-  MockRepository,
-} from '../../create-mock-repository.class';
-import { MovieEntity } from '../entities/movie.entity';
+import { ConflictException } from '@nestjs/common';
 import { RentalServices } from '../services/rental-services.service';
 import { MoviesService } from '../services/movies.service';
-import { ConflictException, NotFoundException } from '@nestjs/common';
 
 describe('RentalServices', () => {
   let service: RentalServices;
-  let moviesRepository: MockRepository;
   const mockMovieService = {
     findById: jest.fn(),
     update: jest.fn(),
@@ -20,24 +12,13 @@ describe('RentalServices', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        RentalServices,
-        MoviesService,
-        { provide: Connection, useValue: {} },
-        {
-          provide: getRepositoryToken(MovieEntity),
-          useValue: createMockRepository(),
-        },
-      ],
+      providers: [RentalServices, MoviesService],
     })
       .overrideProvider(MoviesService)
       .useValue(mockMovieService)
       .compile();
 
     service = module.get<RentalServices>(RentalServices);
-    moviesRepository = module.get<MockRepository>(
-      getRepositoryToken(MovieEntity),
-    );
   });
 
   it('should be defined', () => {

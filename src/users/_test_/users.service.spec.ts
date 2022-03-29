@@ -9,7 +9,7 @@ type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 const createMockRepository = <T = any>(): MockRepository<T> => ({
   findOne: jest.fn(),
   create: jest.fn(),
-  delete: jest.fn(),
+  remove: jest.fn(),
   find: jest.fn(),
   preload: jest.fn(),
   save: jest.fn(),
@@ -113,6 +113,30 @@ describe('UsersService', () => {
         try {
           usersRepository.preload.mockReturnValue(undefined);
           await service.update(userId, updateUser);
+        } catch (err) {
+          expect(err).toBeInstanceOf(NotFoundException);
+          expect(err.message).toEqual(`User #${userId} not found`);
+        }
+      });
+    });
+  });
+
+  describe('delete', () => {
+    const userId = 1;
+    describe('when user with id exists', () => {
+      it('should return a deleted user', async () => {
+        const expectedUser = {};
+        usersRepository.findOne.mockReturnValue(expectedUser);
+        usersRepository.remove.mockReturnValue(expectedUser);
+        const deletedUser = await service.delete(userId);
+        expect(deletedUser).toEqual(expectedUser);
+      });
+    });
+    describe('otherwise', () => {
+      it('should throw a NotFoundException', async () => {
+        try {
+          usersRepository.findOne.mockReturnValue(undefined);
+          await service.delete(userId);
         } catch (err) {
           expect(err).toBeInstanceOf(NotFoundException);
           expect(err.message).toEqual(`User #${userId} not found`);

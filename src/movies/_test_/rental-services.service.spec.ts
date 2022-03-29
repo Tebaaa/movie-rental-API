@@ -93,4 +93,14 @@ describe('RentalServices', () => {
       });
     });
   });
+
+  describe('return', () => {
+    const movieId = 1;
+    it('should return an updated movie', async () => {
+      const expectedMovie = {};
+      mockMovieService.update.mockReturnValue(expectedMovie);
+      const movie = await service.return(movieId);
+      expect(movie).toEqual(expectedMovie);
+    });
+  });
 });

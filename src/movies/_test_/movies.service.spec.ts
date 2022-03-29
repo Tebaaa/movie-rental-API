@@ -7,6 +7,7 @@ import {
 import { Connection } from 'typeorm';
 import { MovieEntity } from '../entities/movie.entity';
 import { MoviesService } from '../services/movies.service';
+import { NotFoundException } from '@nestjs/common';
 
 describe('MoviesService', () => {
   let service: MoviesService;
@@ -40,6 +41,29 @@ describe('MoviesService', () => {
       moviesRepository.find.mockReturnValue(expectedList);
       const list = await service.findAll();
       expect(list).toEqual(expectedList);
+    });
+  });
+
+  describe('findById', () => {
+    const movieId = 1;
+    describe('when movie with ID exists', () => {
+      it('should return a movie object', async () => {
+        const expectedMovie = {};
+        moviesRepository.findOne.mockReturnValue(expectedMovie);
+        const movie = await service.findById(movieId);
+        expect(movie).toEqual(expectedMovie);
+      });
+    });
+    describe('otherwise', () => {
+      it('should throw a NotFoundException', async () => {
+        moviesRepository.findOne.mockReturnValue(undefined);
+        try {
+          await service.findById(movieId);
+        } catch (err) {
+          expect(err).toBeInstanceOf(NotFoundException);
+          expect(err.message).toEqual(`Movie #${movieId} not found`);
+        }
+      });
     });
   });
 });

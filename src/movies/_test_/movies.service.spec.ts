@@ -7,7 +7,8 @@ import {
 import { Connection } from 'typeorm';
 import { MovieEntity } from '../entities/movie.entity';
 import { MoviesService } from '../services/movies.service';
-import { NotFoundException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
+import { CreateMovieDto } from '../dto/create-movie.dto';
 
 describe('MoviesService', () => {
   let service: MoviesService;
@@ -62,6 +63,40 @@ describe('MoviesService', () => {
         } catch (err) {
           expect(err).toBeInstanceOf(NotFoundException);
           expect(err.message).toEqual(`Movie #${movieId} not found`);
+        }
+      });
+    });
+  });
+
+  describe('create', () => {
+    const createMovieDto: CreateMovieDto = {
+      available: true,
+      description: '',
+      likes: 1,
+      poster: '',
+      rent_price: 10,
+      sale_price: 20,
+      stock: 2,
+      title: '',
+      trailer_url: '',
+      tags: [],
+    };
+    const expectedCreatedMovie = {};
+    describe(`if movie doesn't already exists`, () => {
+      it('should return a created movie object', async () => {
+        moviesRepository.save.mockReturnValue(expectedCreatedMovie);
+        const createdMovie = await service.create(createMovieDto);
+        expect(createdMovie).toEqual(expectedCreatedMovie);
+      });
+    });
+    describe('otherwise', () => {
+      it('should throw a ConflictException', async () => {
+        moviesRepository.findOne.mockReturnValue(expectedCreatedMovie);
+        try {
+          await service.create(createMovieDto);
+        } catch (err) {
+          expect(err).toBeInstanceOf(ConflictException);
+          expect(err.message).toEqual('Movie already exists');
         }
       });
     });

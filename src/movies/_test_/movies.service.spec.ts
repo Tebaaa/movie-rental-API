@@ -126,4 +126,28 @@ describe('MoviesService', () => {
       });
     });
   });
+
+  describe('delete', () => {
+    const movieId = 1;
+    describe('when a movie with Id exists', () => {
+      it('should return a deleted movie object', async () => {
+        const expectedMovie = {};
+        moviesRepository.findOne.mockReturnValue(expectedMovie);
+        moviesRepository.remove.mockReturnValue(expectedMovie);
+        const movie = await service.delete(movieId);
+        expect(movie).toEqual(expectedMovie);
+      });
+    });
+    describe('otherwise', () => {
+      it('should throw a NotFoundException', async () => {
+        moviesRepository.findOne.mockReturnValue(undefined);
+        try {
+          await service.delete(movieId);
+        } catch (err) {
+          expect(err).toBeInstanceOf(NotFoundException);
+          expect(err.message).toEqual(`Movie #${movieId} not found`);
+        }
+      });
+    });
+  });
 });

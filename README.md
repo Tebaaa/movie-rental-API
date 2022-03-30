@@ -49,7 +49,7 @@ You'll get an access token like the following:
 >GET http://localhost:3000/movies/\<movie_id>
 
 ### Rent/buy/return a movie:
-- You must be login as a `client` user:
+- You must be logged as a `client` user:
 
 In the header, provide your access token:
 >"Authorization": "Bearer \<access_token>"
@@ -63,7 +63,7 @@ In the header, provide your access token:
 
 ### Create movie: 
 
-- You must be login as an `admin` user:
+- You must be logged as an `admin` user:
 
 In the header, provide your access token:
 >"Authorization": "Bearer \<access_token>"
@@ -89,7 +89,7 @@ In the header, provide your access token:
 
 ### Update movie: 
 
-- You must be login as an `admin` user:
+- You must be logged as an `admin` user:
 
 In the header, provide your access token:
 >"Authorization": "Bearer \<access_token>"
@@ -102,7 +102,7 @@ In the header, provide your access token:
 
 ### Delete movie: 
 
-- You must be login as an `admin` user:
+- You must be logged as an `admin` user:
 
 In the header, provide your access token:
 >"Authorization": "Bearer \<access_token>"
@@ -119,7 +119,7 @@ In the header, provide your access token:
 
 ___
 
-- For the following endpoints you must be login as an `admin` user:
+- For the following endpoints you must be logged as an `admin` user:
 ### Create user:
 >POST http://localhost:3000/users/
 >>{\

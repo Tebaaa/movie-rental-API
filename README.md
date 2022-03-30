@@ -1,73 +1,140 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+<h1 align="center">Movie Rental API</h1>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+![NPM](https://img.shields.io/badge/NPM-8.3.1-389AD5?labelColor=31C4F3&style=for-the-badge) ![NODE](https://img.shields.io/badge/NODE-16.14.0-8FC965?labelColor=5D9741&style=for-the-badge) ![POSTGRESQL](https://img.shields.io/badge/POSTGRESQL-12.9-8FC965?labelColor=5D9741&style=for-the-badge) ![NESTJS](https://img.shields.io/badge/NESTJS-8.2.1-389AD5?labelColor=31C4F3&style=for-the-badge)
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+API that handle movies requests. It shows a list of movies or a single movie if ID is provided. Also, if user has a `client` role, they can buy, rent or return a movie. If a user is `admin`, they can manage the movies and other users. 
 
-## Installation
+## Initial configuration
+Before run the project, you must provide the following environment variables:
 
 ```bash
-$ npm install
+DATABASE_USER = <database_user>
+DATABASE_PASSWORD = <database_password>
+DATABASE_NAME = <database_name>
+DATABASE_PORT = <database_port>
+DATABASE_HOST = <database_host_name>
+JWT_SECRET = <jwt_secret_key>
+SERVER_PORT = <server_port>
+SERVER_HOST = <server_host_name>
 ```
 
-## Running the app
+
+## How to run
 
 ```bash
-# development
 $ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
+## How to use
+## Login:
+On your browser, postman or any application to make HTTP request, do:
+>POST http://localhost:3000/auth/login
+>>{\
+"username": \<your username\>,\
+"password": \<your password\>\
+}
 
-## Test
+You'll get an access token like the following:
+>{\
+	"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlYmFVbm8iLCJzdWIiOjEsImlhdCI6MTY0NzQwMjcxMSwiZXhwIjoxNjQ3NDAzMzExfQ.0hjET0LZ7XhtZH-a2uCRzcrC_Yg9wZL3oueIrRxG3eQ"\
+}
 
-```bash
-# unit tests
-$ npm run test
+## Movies services:
+### Get movies:
 
-# e2e tests
-$ npm run test:e2e
+>GET http://localhost:3000/movies
+### Get a movie by id:
 
-# test coverage
-$ npm run test:cov
-```
+>GET http://localhost:3000/movies/\<movie_id>
 
-## Support
+### Rent/buy/return a movie:
+- You must be login as a `client` user:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+In the header, provide your access token:
+>"Authorization": "Bearer \<access_token>"
 
-## Stay in touch
+>POST http://localhost:3000/movies/\<movie_id>
+>>{\
+	"action": "return"\
+}
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Action can be `buy`, `rent` or `return`.
 
-## License
+### Create movie: 
 
-Nest is [MIT licensed](LICENSE).
+- You must be login as an `admin` user:
+
+In the header, provide your access token:
+>"Authorization": "Bearer \<access_token>"
+
+>POST http://localhost:3000/movies/
+>>{\
+	"title": \<title>,\
+	"description": \<description>,\
+	"poster": \<poster>,\
+	"stock": \<stock>,\
+	"trailer_url": \<trailer_url>,\
+	"sale_price": \<sale_price>,\
+	"rent_price": \<rent_price>,\
+	"available": \<available>,\
+	"likes": \<likes>\
+  "tags": \<tags>\
+}
+
+- `likes` must be a number.
+- `available` must be a boolean.
+- `tags` is optional. It must be a string array.
+- Everything else must be a string.
+
+### Update movie: 
+
+- You must be login as an `admin` user:
+
+In the header, provide your access token:
+>"Authorization": "Bearer \<access_token>"
+
+>PATCH http://localhost:3000/movies/\<movie_id>
+>>{\
+	"sale_price": \<new_sale_price>,\
+	"rent_price": \<new_rent_price>,\
+}
+
+### Delete movie: 
+
+- You must be login as an `admin` user:
+
+In the header, provide your access token:
+>"Authorization": "Bearer \<access_token>"
+
+>DELETE http://localhost:3000/movies/\<movie_id>
+
+
+## Users CRUD:
+### Get all users:
+>GET http://localhost:3000/users/
+
+### Get user by ID:
+>GET http://localhost:3000/users/\<user_id>
+
+___
+
+- For the following endpoints you must be login as an `admin` user:
+### Create user:
+>POST http://localhost:3000/users/
+>>{\
+	"username": \<newUser>,\
+	"password": \<newPassword>,\
+  "role" : \<role>,\
+}
+
+
+### Update user: 
+>PATCH http://localhost:3000/users/\<user_id>
+>>{\
+	"username": "NewUsername"\
+}
+
+### Delete user by id:
+>DELETE http://localhost:3000/users/\<user_id>
+

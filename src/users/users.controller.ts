@@ -12,8 +12,8 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/strategies/jwt/jwt-auth.guard';
-import { AdminGuard } from 'src/movies/guards/admin.guard';
+import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
+import { AdminGuard } from '../movies/guards/admin.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';

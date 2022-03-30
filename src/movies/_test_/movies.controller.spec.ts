@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateMovieDto } from '../dto/create-movie.dto';
 import { MovieEntity } from '../entities/movie.entity';
 import { MoviesController } from '../movies.controller';
 import { MoviesService } from '../services/movies.service';
@@ -62,7 +61,6 @@ describe('MoviesController', () => {
     }),
   };
   const mockRentalService = {};
-  const mockGuard = jest.fn(() => true);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -70,7 +68,6 @@ describe('MoviesController', () => {
       providers: [
         { provide: MoviesService, useValue: mockMoviesService },
         { provide: RentalServices, useValue: mockRentalService },
-        // { provide: JwtAuthGuard, useValue: mockGuard },
       ],
     }).compile();
 

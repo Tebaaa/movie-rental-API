@@ -11,7 +11,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/strategies/jwt/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
 import { ActionDto } from './dto/action.dto';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';

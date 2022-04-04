@@ -2,16 +2,19 @@ import { Exclude } from 'class-transformer';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column()
+  @Column({ length: 50 })
   username: string;
 
   @Exclude()
-  @Column()
+  @Column({ length: 30 })
   password: string;
 
   @Column()
-  role: string;
+  admin: boolean;
+
+  @Column()
+  client: boolean;
 }

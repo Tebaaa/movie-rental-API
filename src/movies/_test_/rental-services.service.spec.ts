@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConflictException } from '@nestjs/common';
-import { RentalServices } from '../services/rental-services.service';
-import { MoviesService } from '../services/movies.service';
+import { RentalServices } from '../rental-services.service';
+import { MoviesService } from '../movies.service';
 
 describe('RentalServices', () => {
   let service: RentalServices;

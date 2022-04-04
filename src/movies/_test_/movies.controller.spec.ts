@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MovieEntity } from '../entities/movie.entity';
 import { MoviesController } from '../movies.controller';
-import { MoviesService } from '../services/movies.service';
-import { RentalServices } from '../services/rental-services.service';
+import { MoviesService } from '../movies.service';
+import { RentalServices } from '../rental-services.service';
 
 describe('MoviesController', () => {
   let controller: MoviesController;

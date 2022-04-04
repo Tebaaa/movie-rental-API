@@ -17,8 +17,8 @@ import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { AdminGuard } from './guards/admin.guard';
 import { ClientGuard } from './guards/client.guard';
-import { MoviesService } from './services/movies.service';
-import { RentalServices } from './services/rental-services.service';
+import { MoviesService } from './movies.service';
+import { RentalServices } from './rental-services.service';
 
 @Controller('movies')
 export class MoviesController {

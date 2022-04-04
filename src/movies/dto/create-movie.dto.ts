@@ -13,7 +13,7 @@ export class CreateMovieDto {
   @IsString()
   readonly description: string;
 
-  @IsString()
+  @IsUrl()
   readonly poster: string;
 
   @IsNumber()

@@ -9,11 +9,14 @@ import {
   Param,
   Patch,
   Post,
+  Put,
+  Request,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
 import { AdminGuard } from '../movies/guards/admin.guard';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { IdDto } from './dto/id.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -53,5 +56,21 @@ export class UsersController {
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param() idDto: IdDto) {
     return this.usersService.delete(idDto);
+  }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard)
+  @Put(':id/password')
+  changePassword(
+    @Request() req,
+    @Param() idDto: IdDto,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
+    const authenticatedUser = req.user;
+    return this.usersService.changePassword(
+      authenticatedUser,
+      idDto,
+      changePasswordDto,
+    );
   }
 }

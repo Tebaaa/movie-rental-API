@@ -6,7 +6,7 @@ export class User {
   id: string;
 
   @Column({ length: 50 })
-  username: string;
+  email: string;
 
   @Exclude()
   @Column({ length: 30 })

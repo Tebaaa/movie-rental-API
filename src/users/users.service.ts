@@ -6,6 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import { IdDto } from './dto/id.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/users.entity';
 
@@ -18,9 +19,9 @@ export class UsersService {
   findAll() {
     return this.userRepository.find();
   }
-  async findById(id: number) {
-    const user = await this.userRepository.findOne(id);
-    if (!user) throw new NotFoundException(`User #${id} not found`);
+  async findById(idDto: IdDto) {
+    const user = await this.userRepository.findOne(idDto.id);
+    if (!user) throw new NotFoundException(`User #${idDto.id} not found`);
     return user;
   }
   async create(createUserDto: CreateUserDto) {
@@ -32,13 +33,16 @@ export class UsersService {
     const newUser = this.userRepository.create(createUserDto);
     return this.userRepository.save(newUser);
   }
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    const user = await this.userRepository.preload({ id, ...updateUserDto });
-    if (!user) throw new NotFoundException(`User #${id} not found`);
+  async update(idDto: IdDto, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepository.preload({
+      ...updateUserDto,
+      id: idDto.id,
+    });
+    if (!user) throw new NotFoundException(`User #${idDto.id} not found`);
     return this.userRepository.save(user);
   }
-  async delete(id: number) {
-    const user = await this.findById(id);
+  async delete(idDto: IdDto) {
+    const user = await this.findById(idDto);
     return this.userRepository.remove(user);
   }
   async findByUsername(username: string) {

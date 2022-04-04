@@ -9,11 +9,13 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
 import { ActionDto } from './dto/action.dto';
 import { CreateMovieDto } from './dto/create-movie.dto';
+import { QueryParamsDto } from './dto/query-params.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { AdminGuard } from './guards/admin.guard';
 import { ClientGuard } from './guards/client.guard';
@@ -28,8 +30,8 @@ export class MoviesController {
   ) {}
 
   @Get()
-  getAll() {
-    return this.moviesService.findAll();
+  getAll(@Query() query: QueryParamsDto) {
+    return this.moviesService.findAll(query);
   }
 
   @Get(':id')

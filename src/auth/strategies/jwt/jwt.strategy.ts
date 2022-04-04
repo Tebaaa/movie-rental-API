@@ -12,8 +12,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  //Acá puedo poner más código para intentar hacer un logout?
   async validate(payload) {
-    return { username: payload.username, role: payload.role };
+    return {
+      username: payload.username,
+      admin: payload.admin,
+      client: payload.client,
+    };
   }
 }

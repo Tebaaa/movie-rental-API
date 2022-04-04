@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -21,23 +22,42 @@ export class MoviesService {
   ) {}
   findAll(queryParams: QueryParamsDto) {
     const { available, tag, name, sortBy } = queryParams;
-    const sortByName = sortBy === 'name';
-    const sortByLikes = sortBy === 'likes';
-    const listOfTags = typeof tag === 'object';
-    const singleTag = typeof tag === 'string';
-    const availableFilter = available === 'true';
-    const nameFilter = name;
-    if (nameFilter) {
-      return this.movieRepository.find({
-        relations: ['tags'],
-        where: { name: Like(`%${nameFilter}%`) },
-      });
+    const isNameFiltered = !!name;
+    const isAvailableFilter = !!available;
+    const isSorted = !!sortBy;
+    let whereOptions = {};
+    let findOptionsObject = {};
+    switch (true) {
+      case isNameFiltered:
+        whereOptions = {
+          ...whereOptions,
+          name: Like(`%${name}%`),
+        };
+      case isAvailableFilter:
+        whereOptions = {
+          ...whereOptions,
+          available: true,
+        };
+      case isSorted:
+        findOptionsObject = this.sortBy(sortBy, findOptionsObject);
     }
-    return this.movieRepository.find({
-      order: { name: 'ASC' },
-      relations: ['tags'],
-      where: { available: true },
-    });
+    const whereOptionsNotEmpty = Object.keys(whereOptions).length !== 0;
+    const findOptionsNotEmpty = Object.keys(findOptionsObject).length !== 0;
+    switch (true) {
+      case whereOptionsNotEmpty:
+        findOptionsObject = {
+          ...findOptionsObject,
+          where: { ...whereOptions },
+        };
+      case findOptionsNotEmpty:
+        return this.movieRepository.find(findOptionsObject);
+      default:
+        return this.movieRepository.find({
+          order: { name: 'ASC' },
+          relations: ['tags'],
+          where: { available: true },
+        });
+    }
   }
   async findById(id: number) {
     const movie = await this.movieRepository.findOne(id, {
@@ -85,5 +105,24 @@ export class MoviesService {
       return existingTag;
     }
     throw new NotFoundException(`Tag '${name}' doesn't exist`);
+  }
+
+  private sortBy(sorter, findOptsObject) {
+    const sortByName = sorter === 'name';
+    const sortByLikes = sorter === 'likes';
+    switch (true) {
+      case sortByName:
+        return {
+          ...findOptsObject,
+          order: { name: 'ASC' },
+        };
+      case sortByLikes:
+        return {
+          ...findOptsObject,
+          order: { likes: 'DESC' },
+        };
+      default:
+        throw new BadRequestException(`sort value must be 'name' or 'likes'`);
+    }
   }
 }

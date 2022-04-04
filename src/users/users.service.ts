@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { IdDto } from './dto/id.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -49,5 +50,36 @@ export class UsersService {
     const user = await this.userRepository.findOne({ email: email });
     if (!user) throw new NotFoundException(`There's no user with that email`);
     return user;
+  }
+
+  async changePassword(
+    userFromRequest,
+    idDto: IdDto,
+    changePasswordDto: ChangePasswordDto,
+  ) {
+    const correctId = userFromRequest.id === idDto.id;
+    const user = await this.findById(idDto);
+    const { oldPassword, newPassword, newPasswordConfirmation } =
+      changePasswordDto;
+    const correctOldPassword = user.password === oldPassword;
+    const equalNewPassword = newPassword === newPasswordConfirmation;
+    const oldPasswordEqualNewPassword = newPassword === oldPassword;
+    const updatePassword = { password: newPassword };
+    switch (true) {
+      case !correctId:
+        throw new ConflictException(
+          'You are authenticated with a different id',
+        );
+      case !correctOldPassword:
+        throw new ConflictException('Incorrect old password');
+      case !equalNewPassword:
+        throw new ConflictException('Your new password must match');
+      case oldPasswordEqualNewPassword:
+        throw new ConflictException(
+          'Your new password must be different from the old one',
+        );
+      default:
+        return this.update(idDto, updatePassword);
+    }
   }
 }

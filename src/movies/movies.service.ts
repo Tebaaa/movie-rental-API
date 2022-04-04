@@ -30,11 +30,11 @@ export class MoviesService {
     if (nameFilter) {
       return this.movieRepository.find({
         relations: ['tags'],
-        where: { title: Like(`%${nameFilter}%`) },
+        where: { name: Like(`%${nameFilter}%`) },
       });
     }
     return this.movieRepository.find({
-      order: { title: 'ASC' },
+      order: { name: 'ASC' },
       relations: ['tags'],
       where: { available: true },
     });
@@ -48,7 +48,7 @@ export class MoviesService {
   }
   async create(createMovieDto: CreateMovieDto) {
     const existingMovie = await this.movieRepository.findOne({
-      title: createMovieDto.title,
+      name: createMovieDto.name,
       description: createMovieDto.description,
     });
     if (existingMovie) {

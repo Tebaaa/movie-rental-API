@@ -8,7 +8,7 @@ import {
 
 export class CreateMovieDto {
   @IsString()
-  readonly title: string;
+  readonly name: string;
 
   @IsString()
   readonly description: string;

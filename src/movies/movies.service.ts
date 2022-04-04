@@ -4,8 +4,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateMovieDto } from './dto/create-movie.dto';
+import { QueryParamsDto } from './dto/query-params.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieEntity } from './entities/movie.entity';
 import { TagEntity } from './entities/tags.entity';
@@ -18,10 +19,24 @@ export class MoviesService {
     @InjectRepository(TagEntity)
     private readonly tagRepository: Repository<TagEntity>,
   ) {}
-  findAll() {
+  findAll(queryParams: QueryParamsDto) {
+    const { available, tag, name, sortBy } = queryParams;
+    const sortByName = sortBy === 'name';
+    const sortByLikes = sortBy === 'likes';
+    const listOfTags = typeof tag === 'object';
+    const singleTag = typeof tag === 'string';
+    const availableFilter = available === 'true';
+    const nameFilter = name;
+    if (nameFilter) {
+      return this.movieRepository.find({
+        relations: ['tags'],
+        where: { title: Like(`%${nameFilter}%`) },
+      });
+    }
     return this.movieRepository.find({
       order: { title: 'ASC' },
       relations: ['tags'],
+      where: { available: true },
     });
   }
   async findById(id: number) {

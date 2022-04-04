@@ -25,11 +25,11 @@ export class UsersService {
     return user;
   }
   async create(createUserDto: CreateUserDto) {
-    const existingUsername = await this.userRepository.findOne({
-      username: createUserDto.username,
+    const existingEmail = await this.userRepository.findOne({
+      email: createUserDto.email,
     });
-    if (existingUsername)
-      throw new ConflictException('Username has already been taken ');
+    if (existingEmail)
+      throw new ConflictException('Email is already registered');
     const newUser = this.userRepository.create(createUserDto);
     return this.userRepository.save(newUser);
   }
@@ -45,9 +45,9 @@ export class UsersService {
     const user = await this.findById(idDto);
     return this.userRepository.remove(user);
   }
-  async findByUsername(username: string) {
-    const user = await this.userRepository.findOne({ username: username });
-    if (!user) throw new NotFoundException(`Username doesn't exist`);
+  async findByEmail(email: string) {
+    const user = await this.userRepository.findOne({ email: email });
+    if (!user) throw new NotFoundException(`There's no user with that email`);
     return user;
   }
 }

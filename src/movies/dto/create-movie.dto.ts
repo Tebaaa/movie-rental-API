@@ -2,6 +2,7 @@ import {
   IsBoolean,
   IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
   IsUrl,
 } from 'class-validator';
@@ -16,7 +17,7 @@ export class CreateMovieDto {
   @IsUrl()
   readonly poster: string;
 
-  @IsNumber()
+  @IsPositive()
   readonly stock: number;
 
   @IsUrl()

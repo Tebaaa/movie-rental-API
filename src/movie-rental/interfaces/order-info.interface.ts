@@ -1,10 +1,8 @@
-import { MovieEntity } from '../../movies/entities/movie.entity';
-import { User } from '../../users/entities/users.entity';
-
 export class IOrderInfo {
+  name: string;
+  quantity: number;
   total: number;
-  movies: MovieEntity[];
-  user: User;
+  email: string;
   action: 'bought' | 'rented';
   movies_info: string[];
 }

@@ -10,8 +10,8 @@ import { MovieEntity } from '../movies/entities/movie.entity';
 import { IdDto } from '../users/dto/id.dto';
 import { RecordEntity } from '../users/entities/record.entity';
 import { User } from '../users/entities/users.entity';
+import { OrderInfo } from './classes/order-info.class';
 import { RentalActionDto } from './dto/rental-action.dto';
-import { IOrderInfo } from './interfaces/order-info.interface';
 
 @Injectable()
 export class MovieRentalService {
@@ -33,48 +33,12 @@ export class MovieRentalService {
   }
 
   private async buyMovie(user: User, movies: MovieEntity[]) {
-    const total = movies.reduce((amount, movie) => {
-      amount += movie.sale_price;
-      return amount;
-    }, 0);
-    const movies_info = movies.map((movie) => {
-      const movie_info = {
-        title: movie.name,
-        description: movie.description,
-        price: movie.sale_price,
-      };
-      return JSON.stringify(movie_info);
-    });
-    const orderInfo: IOrderInfo = {
-      total,
-      movies,
-      user,
-      action: 'bought',
-      movies_info,
-    };
+    const orderInfo = new OrderInfo(movies, user, 'bought');
     return this.mailService.sendOrderInfo(orderInfo);
   }
 
   private async rentMovie(user: User, movies: MovieEntity[]) {
-    const total = movies.reduce((amount, movie) => {
-      amount += movie.rent_price;
-      return amount;
-    }, 0);
-    const movies_info = movies.map((movie) => {
-      const movie_info = {
-        title: movie.name,
-        description: movie.description,
-        price: movie.sale_price,
-      };
-      return JSON.stringify(movie_info);
-    });
-    const orderInfo: IOrderInfo = {
-      total,
-      movies,
-      user,
-      action: 'rented',
-      movies_info,
-    };
+    const orderInfo = new OrderInfo(movies, user, 'rented');
     return this.mailService.sendOrderInfo(orderInfo);
   }
 

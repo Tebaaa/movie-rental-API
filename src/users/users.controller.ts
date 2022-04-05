@@ -15,6 +15,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
+import { RentalActionDto } from '../movie-rental/dto/rental-action.dto';
+import { MovieRentalService } from '../movie-rental/movie-rental.service';
 import { AdminGuard } from '../movies/guards/admin.guard';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,7 +26,10 @@ import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private movieRentalService: MovieRentalService,
+  ) {}
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
   getAll() {
@@ -72,5 +77,18 @@ export class UsersController {
       idDto,
       changePasswordDto,
     );
+  }
+
+  @Get(':id/movies')
+  async getRecord(@Param() idDto: IdDto) {
+    return this.movieRentalService.getRecord(idDto);
+  }
+
+  @Post(':id/movies')
+  async rentalService(
+    @Param() idDto: IdDto,
+    @Body() rentalActionDto: RentalActionDto,
+  ) {
+    return this.movieRentalService.executeAction(idDto, rentalActionDto);
   }
 }

@@ -10,5 +10,6 @@ import { RentalServices } from './rental-services.service';
   imports: [TypeOrmModule.forFeature([MovieEntity, TagEntity])],
   controllers: [MoviesController],
   providers: [MoviesService, RentalServices],
+  exports: [MoviesService],
 })
 export class MoviesModule {}

@@ -6,6 +6,7 @@ import { MoviesModule } from './movies/movies.module';
 import { AuthModule } from './auth/auth.module';
 import { AccountModule } from './account/account.module';
 import { MailModule } from './mail/mail.module';
+import { MovieRentalModule } from './movie-rental/movie-rental.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MailModule } from './mail/mail.module';
     AuthModule,
     AccountModule,
     MailModule,
+    MovieRentalModule,
   ],
 })
 export class AppModule {}

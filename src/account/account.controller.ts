@@ -21,6 +21,7 @@ export class AccountController {
     await this.accountService.forgotPassword(emailDto);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put('password')
   changePass(
     @Query() idDto: IdDto,

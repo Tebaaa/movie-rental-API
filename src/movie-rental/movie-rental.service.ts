@@ -7,11 +7,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MailService } from '../mail/mail.service';
 import { MovieEntity } from '../movies/entities/movie.entity';
-import { MoviesService } from '../movies/movies.service';
 import { IdDto } from '../users/dto/id.dto';
 import { RecordEntity } from '../users/entities/record.entity';
 import { User } from '../users/entities/users.entity';
 import { RentalActionDto } from './dto/rental-action.dto';
+import { IOrderInfo } from './interfaces/order-info.interface';
 
 @Injectable()
 export class MovieRentalService {
@@ -38,23 +38,21 @@ export class MovieRentalService {
       return amount;
     }, 0);
     const movies_info = movies.map((movie) => {
-      return {
+      const movie_info = {
         title: movie.name,
         description: movie.description,
         price: movie.sale_price,
       };
-    });
-    const movies_info_string = movies_info.map((movie_info) => {
       return JSON.stringify(movie_info);
     });
-    console.log(movies_info_string);
-    return this.mailService.sendOrderInfo(
+    const orderInfo: IOrderInfo = {
       total,
       movies,
       user,
-      'bought',
-      movies_info_string,
-    );
+      action: 'bought',
+      movies_info,
+    };
+    return this.mailService.sendOrderInfo(orderInfo);
   }
 
   private async rentMovie() {

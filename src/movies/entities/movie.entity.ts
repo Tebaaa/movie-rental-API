@@ -3,8 +3,10 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { RecordEntity } from '../../users/entities/record.entity';
 import { TagEntity } from './tags.entity';
 
 @Entity('movie')
@@ -42,4 +44,7 @@ export class MovieEntity {
   @JoinTable()
   @ManyToMany((type) => TagEntity, (tag) => tag.movies)
   tags: TagEntity[];
+
+  @OneToMany((type) => RecordEntity, (record) => record.movie)
+  record: RecordEntity[];
 }

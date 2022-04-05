@@ -55,8 +55,27 @@ export class MovieRentalService {
     return this.mailService.sendOrderInfo(orderInfo);
   }
 
-  private async rentMovie() {
-    return 'rentMovie';
+  private async rentMovie(user: User, movies: MovieEntity[]) {
+    const total = movies.reduce((amount, movie) => {
+      amount += movie.rent_price;
+      return amount;
+    }, 0);
+    const movies_info = movies.map((movie) => {
+      const movie_info = {
+        title: movie.name,
+        description: movie.description,
+        price: movie.sale_price,
+      };
+      return JSON.stringify(movie_info);
+    });
+    const orderInfo: IOrderInfo = {
+      total,
+      movies,
+      user,
+      action: 'rented',
+      movies_info,
+    };
+    return this.mailService.sendOrderInfo(orderInfo);
   }
 
   private async returnMovie() {
@@ -85,7 +104,7 @@ export class MovieRentalService {
       case actionIsBuy:
         return this.buyMovie(user, movies);
       case actionIsRent:
-        return this.rentMovie();
+        return this.rentMovie(user, movies);
 
       case actionIsReturn:
         return this.returnMovie();

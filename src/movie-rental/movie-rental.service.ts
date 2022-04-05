@@ -32,9 +32,12 @@ export class MovieRentalService {
     });
   }
 
+  // private async addToRecord(user: User, movie: MovieEntity) {
+  // }
+
   private async buyMovie(user: User, movies: MovieEntity[]) {
     const orderInfo = new OrderInfo(movies, user, 'bought');
-    return this.mailService.sendOrderInfo(orderInfo);
+    await this.mailService.sendOrderInfo(orderInfo);
   }
 
   private async rentMovie(user: User, movies: MovieEntity[]) {
@@ -42,8 +45,33 @@ export class MovieRentalService {
     return this.mailService.sendOrderInfo(orderInfo);
   }
 
-  private async returnMovie() {
-    return 'returnMovie';
+  private async returnMovie(user: User, moviesId: number[]) {
+    const records = await Promise.all(
+      moviesId.map(async (movie_id) => {
+        const movie = await this.recordRepository.findOne({ movie_id });
+        if (movie && movie.rented) {
+          return movie;
+        }
+        throw new NotFoundException(
+          `You haven't rented movie #${movie_id}, movie doesn't exist or is already returned`,
+        );
+      }),
+    );
+    const movies = await Promise.all(
+      moviesId.map((id) => {
+        return this.moviesRepository.findOne(id);
+      }),
+    );
+    const updatedMovies = movies.map((movie) => {
+      const { stock, id } = movie;
+      this.moviesRepository.update(id, { available: true, stock: stock + 1 });
+    });
+    await Promise.all(
+      records.map(async (record) => {
+        return await this.recordRepository.remove(record);
+      }),
+    );
+    return updatedMovies;
   }
 
   async executeAction(idDto: IdDto, rentalActionDto: RentalActionDto) {
@@ -71,7 +99,7 @@ export class MovieRentalService {
         return this.rentMovie(user, movies);
 
       case actionIsReturn:
-        return this.returnMovie();
+        return this.returnMovie(user, moviesId);
 
       default:
         throw new BadRequestException(

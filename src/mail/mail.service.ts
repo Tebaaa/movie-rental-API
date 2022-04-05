@@ -1,5 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { IOrderInfo } from '../movie-rental/interfaces/order-info.interface';
 import { MovieEntity } from '../movies/entities/movie.entity';
 import { User } from '../users/entities/users.entity';
 
@@ -24,13 +25,8 @@ export class MailService {
     });
   }
 
-  async sendOrderInfo(
-    total: number,
-    movies: MovieEntity[],
-    user: User,
-    action: 'bought' | 'rented',
-    movies_info,
-  ) {
+  async sendOrderInfo(orderInfo: IOrderInfo) {
+    const { action, movies, movies_info, total, user } = orderInfo;
     const quantity = movies.length;
 
     await this.mailerService.sendMail({

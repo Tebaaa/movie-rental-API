@@ -12,7 +12,7 @@ export class TagEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 20 })
   name: string;
 
   @JoinTable()

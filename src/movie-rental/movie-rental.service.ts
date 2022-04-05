@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { MailService } from '../mail/mail.service';
 import { MovieEntity } from '../movies/entities/movie.entity';
 import { MoviesService } from '../movies/movies.service';
 import { IdDto } from '../users/dto/id.dto';
@@ -21,6 +22,7 @@ export class MovieRentalService {
     private userRepository: Repository<User>,
     @InjectRepository(MovieEntity)
     private moviesRepository: Repository<MovieEntity>,
+    private mailService: MailService,
   ) {}
 
   getRecord(idDto: IdDto) {
@@ -30,9 +32,29 @@ export class MovieRentalService {
     });
   }
 
-  private async buyMovie(idDto: IdDto, movies: MovieEntity[]) {
-    const user = await this.userRepository.findOne(idDto.id);
-    return movies;
+  private async buyMovie(user: User, movies: MovieEntity[]) {
+    const total = movies.reduce((amount, movie) => {
+      amount += movie.sale_price;
+      return amount;
+    }, 0);
+    const movies_info = movies.map((movie) => {
+      return {
+        title: movie.name,
+        description: movie.description,
+        price: movie.sale_price,
+      };
+    });
+    const movies_info_string = movies_info.map((movie_info) => {
+      return JSON.stringify(movie_info);
+    });
+    console.log(movies_info_string);
+    return this.mailService.sendOrderInfo(
+      total,
+      movies,
+      user,
+      'bought',
+      movies_info_string,
+    );
   }
 
   private async rentMovie() {
@@ -63,7 +85,7 @@ export class MovieRentalService {
     );
     switch (true) {
       case actionIsBuy:
-        return this.buyMovie(idDto, movies);
+        return this.buyMovie(user, movies);
       case actionIsRent:
         return this.rentMovie();
 

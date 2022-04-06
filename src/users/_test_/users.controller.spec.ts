@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { MovieRentalService } from '../../movie-rental/movie-rental.service';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { IdDto } from '../dto/id.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { User } from '../entities/users.entity';
 import { UsersController } from '../users.controller';
@@ -7,38 +9,44 @@ import { UsersService } from '../users.service';
 
 describe('UsersController', () => {
   let controller: UsersController;
-  const mockUserId = 3;
+  const mockIdDto: IdDto = { id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2' };
   const mockUser: User = {
-    id: 1,
-    username: 'username',
+    id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2',
+    email: 'email@example.com',
     password: 'password',
-    role: 'admin',
+    name: 'name',
+    admin: true,
+    client: true,
+    lastname: 'lastname',
+    record: [],
   };
   const mockUsersList: User[] = [
     { ...mockUser },
     {
       ...mockUser,
-      id: 2,
+      id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a3',
     },
     {
       ...mockUser,
-      id: 3,
+      id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a4',
     },
   ];
   const mockCreateUserDto: CreateUserDto = {
-    username: 'new username',
+    email: 'newEmail@mail.com',
     password: 'new pass',
-    role: 'admin',
+    admin: true,
+    client: true,
+    name: 'new user name',
   };
-  const mockUpdateUserDto: UpdateUserDto = { username: 'updated username' };
+  const mockUpdateUserDto: UpdateUserDto = { name: 'updated name' };
   const mockUserService = {
     findAll: jest.fn(() => ['test']),
-    findById: jest.fn((id: number): User => {
-      return mockUsersList.find((user) => user.id === id);
+    findById: jest.fn((idDto: IdDto): User => {
+      return mockUsersList.find((user) => user.id === idDto.id);
     }),
     create: jest.fn((dto): User => {
       return {
-        id: 1,
+        id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a8',
         ...dto,
       };
     }),
@@ -48,15 +56,20 @@ describe('UsersController', () => {
         ...dto,
       };
     }),
-    delete: jest.fn((id: number): User => {
-      return mockUsersList.find((user) => user.id === id);
+    delete: jest.fn((idDto: IdDto): User => {
+      return mockUsersList.find((user) => user.id === idDto.id);
     }),
   };
+
+  const mockMovieRentalService = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [UsersService],
+      providers: [
+        UsersService,
+        { provide: MovieRentalService, useValue: mockMovieRentalService },
+      ],
     })
       .overrideProvider(UsersService)
       .useValue(mockUserService)
@@ -71,14 +84,14 @@ describe('UsersController', () => {
 
   it('should create a user', () => {
     expect(controller.create(mockCreateUserDto)).toEqual({
-      id: expect.any(Number),
+      id: expect.any(String),
       ...mockCreateUserDto,
     });
   });
 
   it('should update a user', () => {
-    expect(controller.update(mockUserId, mockUpdateUserDto)).toEqual({
-      id: mockUserId,
+    expect(controller.update(mockIdDto, mockUpdateUserDto)).toEqual({
+      id: mockIdDto,
       ...mockUpdateUserDto,
     });
   });
@@ -88,12 +101,12 @@ describe('UsersController', () => {
   });
 
   it('should get an user by its id', () => {
-    const expectedUser = mockUsersList.find((user) => user.id === mockUserId);
-    expect(controller.getById(mockUserId)).toEqual(expectedUser);
+    const expectedUser = mockUsersList.find((user) => user.id === mockIdDto.id);
+    expect(controller.getById(mockIdDto)).toEqual(expectedUser);
   });
 
   it('should delete an user by its id', () => {
-    const expectedUser = mockUsersList.find((user) => user.id === mockUserId);
-    expect(controller.getById(mockUserId)).toEqual(expectedUser);
+    const expectedUser = mockUsersList.find((user) => user.id === mockIdDto.id);
+    expect(controller.delete(mockIdDto)).toEqual(expectedUser);
   });
 });

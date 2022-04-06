@@ -23,12 +23,12 @@ export class AccountController {
   @HttpCode(HttpStatus.ACCEPTED)
   @Put('forgot-password')
   async sendEmail(@Body() emailDto: EmailDto) {
-    await this.accountService.forgotPassword(emailDto);
+    return await this.accountService.forgotPassword(emailDto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put('password')
-  changePass(
+  resetPassword(
     @Query() idDto: IdDto,
     @Body() resetPasswordDto: ResetPasswordDto,
   ) {

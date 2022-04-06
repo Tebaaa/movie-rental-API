@@ -201,4 +201,16 @@ describe('MovieRentalService', () => {
       expect(returnedValue).toEqual(expectedReturn);
     });
   });
+  describe('buyMovie', () => {
+    it('should return a record', async () => {
+      const expectedReturn = {};
+      const addToRecord = jest.spyOn(service, 'addToRecord');
+      addToRecord.mockReturnValue({} as Promise<RecordEntity>);
+      const returnValue = await service.buyMovie({} as User, [
+        {} as MovieEntity,
+        {} as MovieEntity,
+      ]);
+      expect(returnValue).toEqual(expectedReturn);
+    });
+  });
 });

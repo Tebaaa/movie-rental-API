@@ -143,7 +143,7 @@ describe('UsersService', () => {
     });
   });
 
-  describe('findByUsername', () => {
+  describe('findByEmail', () => {
     const email = 'mail@mail.com';
     describe('when email exists', () => {
       it('should return a user object', async () => {

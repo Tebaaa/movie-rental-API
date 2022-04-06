@@ -18,10 +18,12 @@ import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
 import { RentalActionDto } from '../movie-rental/dto/rental-action.dto';
 import { MovieRentalService } from '../movie-rental/movie-rental.service';
 import { AdminGuard } from '../movies/guards/admin.guard';
+import { ClientGuard } from '../movies/guards/client.guard';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { IdDto } from './dto/id.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { CorrectIdGuard } from './guards/correct-id.guard';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -64,26 +66,22 @@ export class UsersController {
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CorrectIdGuard)
   @Put(':id/password')
   changePassword(
-    @Request() req,
     @Param() idDto: IdDto,
     @Body() changePasswordDto: ChangePasswordDto,
   ) {
-    const authenticatedUser = req.user;
-    return this.usersService.changePassword(
-      authenticatedUser,
-      idDto,
-      changePasswordDto,
-    );
+    return this.usersService.changePassword(idDto, changePasswordDto);
   }
 
+  @UseGuards(JwtAuthGuard, CorrectIdGuard, ClientGuard)
   @Get(':id/movies')
   async getRecord(@Param() idDto: IdDto) {
     return this.movieRentalService.getRecord(idDto);
   }
 
+  @UseGuards(JwtAuthGuard, CorrectIdGuard, ClientGuard)
   @Post(':id/movies')
   async rentalService(
     @Param() idDto: IdDto,

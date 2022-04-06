@@ -20,7 +20,7 @@ export class RecordEntity {
   movie_id: number;
 
   @Column({ nullable: true })
-  rented: boolean;
+  rent: boolean;
 
   @Column({ nullable: true })
   buy: boolean;

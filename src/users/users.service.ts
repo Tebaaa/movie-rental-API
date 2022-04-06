@@ -52,12 +52,7 @@ export class UsersService {
     return user;
   }
 
-  async changePassword(
-    userFromRequest,
-    idDto: IdDto,
-    changePasswordDto: ChangePasswordDto,
-  ) {
-    const correctId = userFromRequest.id === idDto.id;
+  async changePassword(idDto: IdDto, changePasswordDto: ChangePasswordDto) {
     const user = await this.findById(idDto);
     const { oldPassword, newPassword, newPasswordConfirmation } =
       changePasswordDto;
@@ -66,10 +61,6 @@ export class UsersService {
     const oldPasswordEqualNewPassword = newPassword === oldPassword;
     const updatePassword = { password: newPassword };
     switch (true) {
-      case !correctId:
-        throw new ConflictException(
-          'You are authenticated with a different id',
-        );
       case !correctOldPassword:
         throw new ConflictException('Incorrect old password');
       case !equalNewPassword:

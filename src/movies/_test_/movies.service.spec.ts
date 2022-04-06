@@ -7,7 +7,11 @@ import {
 import { Connection } from 'typeorm';
 import { MovieEntity } from '../entities/movie.entity';
 import { MoviesService } from '../movies.service';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateMovieDto } from '../dto/create-movie.dto';
 import { TagEntity } from '../entities/tags.entity';
 
@@ -153,6 +157,32 @@ describe('MoviesService', () => {
         } catch (err) {
           expect(err).toBeInstanceOf(NotFoundException);
           expect(err.message).toEqual(`Movie #${movieId} not found`);
+        }
+      });
+    });
+  });
+  describe('sortBy', () => {
+    describe(`when sorter is 'name'`, () => {
+      it('should return object with name property', async () => {
+        const expectedObject = { order: { name: 'ASC' } };
+        const returnedObject = service.sortBy('name', {});
+        expect(expectedObject).toEqual(returnedObject);
+      });
+    });
+    describe(`when sorter is 'likes'`, () => {
+      it('should return object with likes property', async () => {
+        const expectedObject = { order: { likes: 'DESC' } };
+        const returnedObject = service.sortBy('likes', {});
+        expect(expectedObject).toEqual(returnedObject);
+      });
+    });
+    describe('otherwise', () => {
+      it('should throw a BadRequestException', () => {
+        try {
+          service.sortBy('bla', {});
+        } catch (err) {
+          expect(err).toBeInstanceOf(BadRequestException);
+          expect(err.message).toContain('sort value');
         }
       });
     });

@@ -24,6 +24,6 @@ export class AuthService {
       admin: user.admin,
       client: user.client,
     };
-    return { acces_token: this.jwtService.sign(payload) };
+    return { access_token: this.jwtService.sign(payload) };
   }
 }

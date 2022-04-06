@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -32,12 +33,45 @@ export class MovieRentalService {
     });
   }
 
-  // private async addToRecord(user: User, movie: MovieEntity) {
-  // }
+  private async addToRecord(
+    user: User,
+    movie: MovieEntity,
+    action: 'buy' | 'rent',
+  ) {
+    const rent = action === 'rent';
+    const buy = action === 'buy';
+    const user_id = user.id;
+    const movie_id = movie.id;
+    const record = this.recordRepository.create({
+      user_id,
+      buy,
+      rent,
+      movie_id,
+    });
+    return await this.recordRepository.save(record);
+  }
 
   private async buyMovie(user: User, movies: MovieEntity[]) {
     const orderInfo = new OrderInfo(movies, user, 'bought');
+    const updatedMovies = await Promise.all(
+      movies.map(async (movie) => {
+        const { stock, id, name } = movie;
+        if (stock) {
+          return await this.moviesRepository.update(id, {
+            available: stock !== 1,
+            stock: stock - 1,
+          });
+        }
+        throw new ConflictException(`Movie #${id} '${name}' has no stock left`);
+      }),
+    );
     await this.mailService.sendOrderInfo(orderInfo);
+    const records = await Promise.all(
+      movies.map(async (movie) => {
+        return await this.addToRecord(user, movie, 'buy');
+      }),
+    );
+    return records;
   }
 
   private async rentMovie(user: User, movies: MovieEntity[]) {
@@ -49,7 +83,7 @@ export class MovieRentalService {
     const records = await Promise.all(
       moviesId.map(async (movie_id) => {
         const movie = await this.recordRepository.findOne({ movie_id });
-        if (movie && movie.rented) {
+        if (movie && movie.rent) {
           return movie;
         }
         throw new NotFoundException(

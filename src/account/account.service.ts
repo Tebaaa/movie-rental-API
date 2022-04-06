@@ -15,7 +15,7 @@ export class AccountService {
 
   async forgotPassword(emailDto: EmailDto) {
     const user = await this.usersService.findByEmail(emailDto.email);
-    await this.mailService.sendPasswordReset(user);
+    return await this.mailService.sendPasswordReset(user);
   }
 
   async resetPassword(idDto: IdDto, resetPasswordDto: ResetPasswordDto) {

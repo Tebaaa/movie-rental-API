@@ -104,7 +104,7 @@ export class MoviesService {
     return this.movieRepository.remove(movie);
   }
 
-  private async preloadTagByName(name: string) {
+  async preloadTagByName(name: string) {
     const existingTag = await this.tagRepository.findOne({ name });
     if (existingTag) {
       return existingTag;

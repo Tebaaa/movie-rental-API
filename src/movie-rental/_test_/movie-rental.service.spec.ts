@@ -1,4 +1,4 @@
-import { BadRequestException, Module, NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
@@ -10,7 +10,7 @@ import { MailService } from '../../mail/mail.service';
 import { MovieEntity } from '../../movies/entities/movie.entity';
 import { RecordEntity } from '../../users/entities/record.entity';
 import { User } from '../../users/entities/users.entity';
-import { mockIdDto } from '../../_test_mocks_/user-service.mock';
+import { mockIdDto, mockUser } from '../../_test_mocks_/user-service.mock';
 import { RentalActionDto } from '../dto/rental-action.dto';
 import { MovieRentalService } from '../movie-rental.service';
 
@@ -175,6 +175,28 @@ describe('MovieRentalService', () => {
           }
         });
       });
+    });
+  });
+  describe('getRecord', () => {
+    it('should return a RecordEntity object', async () => {
+      const expectedReturn = {};
+      recordsRepository.find.mockReturnValue(expectedReturn);
+      const returnedValue = service.getRecord(mockIdDto);
+      expect(returnedValue).toEqual(expectedReturn);
+    });
+  });
+
+  describe('addToRecord', () => {
+    it('should save a record', async () => {
+      const expectedReturn = {};
+      const mockMovie = {} as MovieEntity;
+      recordsRepository.save.mockReturnValue(expectedReturn);
+      const returnedValue = await service.addToRecord(
+        mockUser,
+        mockMovie,
+        'buy',
+      );
+      expect(returnedValue).toEqual(expectedReturn);
     });
   });
 });

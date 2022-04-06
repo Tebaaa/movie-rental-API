@@ -1,4 +1,5 @@
-import { IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 type SortOptions = 'name' | 'likes';
 
@@ -16,6 +17,15 @@ export class QueryParamsDto {
   tag: string | string[];
 
   @IsOptional()
-  @IsString()
-  available: string;
+  @Transform(({ value }) => {
+    if (value === 'true') {
+      return true;
+    }
+    if (value === 'false') {
+      return false;
+    }
+    return 'bad request';
+  })
+  @IsBoolean()
+  available: boolean;
 }

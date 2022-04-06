@@ -9,8 +9,6 @@ import {
   Param,
   Patch,
   Post,
-  Put,
-  Request,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -19,7 +17,6 @@ import { RentalActionDto } from '../movie-rental/dto/rental-action.dto';
 import { MovieRentalService } from '../movie-rental/movie-rental.service';
 import { AdminGuard } from '../movies/guards/admin.guard';
 import { ClientGuard } from '../movies/guards/client.guard';
-import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { IdDto } from './dto/id.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -63,16 +60,6 @@ export class UsersController {
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param() idDto: IdDto) {
     return this.usersService.delete(idDto);
-  }
-
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(JwtAuthGuard, CorrectIdGuard)
-  @Put(':id/password')
-  changePassword(
-    @Param() idDto: IdDto,
-    @Body() changePasswordDto: ChangePasswordDto,
-  ) {
-    return this.usersService.changePassword(idDto, changePasswordDto);
   }
 
   @UseGuards(JwtAuthGuard, CorrectIdGuard, ClientGuard)

@@ -20,26 +20,33 @@ export class MoviesService {
     @InjectRepository(TagEntity)
     private readonly tagRepository: Repository<TagEntity>,
   ) {}
-  findAll(queryParams: QueryParamsDto) {
+  async findAll(queryParams: QueryParamsDto) {
     const { available, tag, name, sortBy } = queryParams;
     const isNameFiltered = !!name;
-    const isAvailableFilter = !!available;
+    const isAvailableFiltered = typeof available === 'boolean';
     const isSorted = !!sortBy;
+    const isTagFiltered = !!tag;
     let whereOptions = {};
     let findOptionsObject = {};
-    switch (true) {
-      case isNameFiltered:
-        whereOptions = {
-          ...whereOptions,
-          name: Like(`%${name}%`),
-        };
-      case isAvailableFilter:
-        whereOptions = {
-          ...whereOptions,
-          available: true,
-        };
-      case isSorted:
-        findOptionsObject = this.sortBy(sortBy, findOptionsObject);
+    if (isTagFiltered) {
+      console.log('falta implementar tag filter');
+    }
+    if (isNameFiltered) {
+      console.log(name);
+      whereOptions = {
+        ...whereOptions,
+        name: Like(`%${name}%`),
+      };
+    }
+    if (isAvailableFiltered) {
+      whereOptions = {
+        ...whereOptions,
+        available,
+      };
+      console.log(JSON.stringify(whereOptions), 'no deberia');
+    }
+    if (isSorted) {
+      findOptionsObject = this.sortBy(sortBy, findOptionsObject);
     }
     const whereOptionsNotEmpty = Object.keys(whereOptions).length !== 0;
     const findOptionsNotEmpty = Object.keys(findOptionsObject).length !== 0;
@@ -50,9 +57,9 @@ export class MoviesService {
           where: { ...whereOptions },
         };
       case findOptionsNotEmpty:
-        return this.movieRepository.find(findOptionsObject);
+        return await this.movieRepository.find(findOptionsObject);
       default:
-        return this.movieRepository.find({
+        return await this.movieRepository.find({
           order: { name: 'ASC' },
           relations: ['tags'],
           where: { available: true },

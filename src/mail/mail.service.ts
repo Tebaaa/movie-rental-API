@@ -13,7 +13,7 @@ export class MailService {
     const userId = user.id;
     const url = `${this.host}:${this.port}/account/password?=id=${userId}`;
 
-    await this.mailerService.sendMail({
+    return await this.mailerService.sendMail({
       to: user.email,
       subject: 'Password reset',
       template: 'reset-password',
@@ -27,7 +27,7 @@ export class MailService {
   async sendOrderInfo(orderInfo: OrderInfo) {
     const { action, movies_info, total, email, quantity, name } = orderInfo;
 
-    await this.mailerService.sendMail({
+    return await this.mailerService.sendMail({
       to: email,
       subject: 'Order Info',
       template: 'send-order-info',

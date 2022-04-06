@@ -187,4 +187,25 @@ describe('MoviesService', () => {
       });
     });
   });
+  describe('preloadTagByName', () => {
+    describe('when tag with name exists', () => {
+      it('should return a TagEntity object', async () => {
+        const expectedTag = {};
+        tagsRepository.findOne.mockReturnValue(expectedTag);
+        const returnedTag = await service.preloadTagByName('');
+        expect(returnedTag).toEqual(expectedTag);
+      });
+    });
+    describe('otherwise', () => {
+      it('should throw a NotFoundException', async () => {
+        tagsRepository.findOne.mockReturnValue(undefined);
+        try {
+          await service.preloadTagByName('tag name');
+        } catch (error) {
+          expect(error).toBeInstanceOf(NotFoundException);
+          expect(error.message).toContain(`doesn't exist`);
+        }
+      });
+    });
+  });
 });

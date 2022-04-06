@@ -112,7 +112,7 @@ export class MoviesService {
     throw new NotFoundException(`Tag '${name}' doesn't exist`);
   }
 
-  private sortBy(sorter, findOptsObject) {
+  sortBy(sorter, findOptsObject) {
     const sortByName = sorter === 'name';
     const sortByLikes = sorter === 'likes';
     switch (true) {

@@ -44,4 +44,5 @@ export const mockUserService = {
   delete: jest.fn((idDto: IdDto): User => {
     return mockUsersList.find((user) => user.id === idDto.id);
   }),
+  findByEmail: jest.fn(),
 };

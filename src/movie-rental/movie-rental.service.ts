@@ -33,11 +33,7 @@ export class MovieRentalService {
     });
   }
 
-  private async addToRecord(
-    user: User,
-    movie: MovieEntity,
-    action: 'buy' | 'rent',
-  ) {
+  async addToRecord(user: User, movie: MovieEntity, action: 'buy' | 'rent') {
     const rent = action === 'rent';
     const buy = action === 'buy';
     const user_id = user.id;
@@ -51,7 +47,7 @@ export class MovieRentalService {
     return await this.recordRepository.save(record);
   }
 
-  private async buyMovie(user: User, movies: MovieEntity[]) {
+  async buyMovie(user: User, movies: MovieEntity[]) {
     const orderInfo = new OrderInfo(movies, user, 'bought');
     const updatedMovies = await Promise.all(
       movies.map(async (movie) => {
@@ -74,7 +70,7 @@ export class MovieRentalService {
     return records;
   }
 
-  private async rentMovie(user: User, movies: MovieEntity[]) {
+  async rentMovie(user: User, movies: MovieEntity[]) {
     const orderInfo = new OrderInfo(movies, user, 'rented');
     const updatedMovies = await Promise.all(
       movies.map(async (movie) => {
@@ -97,7 +93,7 @@ export class MovieRentalService {
     return records;
   }
 
-  private async returnMovie(user: User, moviesId: number[]) {
+  async returnMovie(user: User, moviesId: number[]) {
     const user_id = user.id;
     const records = await Promise.all(
       moviesId.map(async (movie_id) => {

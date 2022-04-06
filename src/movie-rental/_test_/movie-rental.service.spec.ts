@@ -20,7 +20,9 @@ describe('MovieRentalService', () => {
   let usersRepository: MockRepository;
   let recordsRepository: MockRepository;
 
-  const mockMailService = {};
+  const mockMailService = {
+    sendOrderInfo: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

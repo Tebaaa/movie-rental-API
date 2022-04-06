@@ -68,6 +68,7 @@ export class UsersController {
     return this.movieRentalService.getRecord(idDto);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtAuthGuard, CorrectIdGuard, ClientGuard)
   @Post(':id/movies')
   async rentalService(

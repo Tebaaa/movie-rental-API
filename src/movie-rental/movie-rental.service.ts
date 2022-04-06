@@ -76,15 +76,38 @@ export class MovieRentalService {
 
   private async rentMovie(user: User, movies: MovieEntity[]) {
     const orderInfo = new OrderInfo(movies, user, 'rented');
-    return this.mailService.sendOrderInfo(orderInfo);
+    const updatedMovies = await Promise.all(
+      movies.map(async (movie) => {
+        const { stock, id, name } = movie;
+        if (stock) {
+          return await this.moviesRepository.update(id, {
+            available: stock !== 1,
+            stock: stock - 1,
+          });
+        }
+        throw new ConflictException(`Movie #${id} '${name}' has no stock left`);
+      }),
+    );
+    await this.mailService.sendOrderInfo(orderInfo);
+    const records = await Promise.all(
+      movies.map(async (movie) => {
+        return await this.addToRecord(user, movie, 'rent');
+      }),
+    );
+    return records;
   }
 
   private async returnMovie(user: User, moviesId: number[]) {
+    const user_id = user.id;
     const records = await Promise.all(
       moviesId.map(async (movie_id) => {
-        const movie = await this.recordRepository.findOne({ movie_id });
-        if (movie && movie.rent) {
-          return movie;
+        const record = await this.recordRepository.findOne({
+          movie_id,
+          user_id,
+          rent: true,
+        });
+        if (record && record.rent) {
+          return record;
         }
         throw new NotFoundException(
           `You haven't rented movie #${movie_id}, movie doesn't exist or is already returned`,
@@ -100,12 +123,11 @@ export class MovieRentalService {
       const { stock, id } = movie;
       this.moviesRepository.update(id, { available: true, stock: stock + 1 });
     });
-    await Promise.all(
+    return await Promise.all(
       records.map(async (record) => {
         return await this.recordRepository.remove(record);
       }),
     );
-    return updatedMovies;
   }
 
   async executeAction(idDto: IdDto, rentalActionDto: RentalActionDto) {

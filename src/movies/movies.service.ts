@@ -32,7 +32,6 @@ export class MoviesService {
       console.log('falta implementar tag filter');
     }
     if (isNameFiltered) {
-      console.log(name);
       whereOptions = {
         ...whereOptions,
         name: Like(`%${name}%`),
@@ -43,7 +42,6 @@ export class MoviesService {
         ...whereOptions,
         available,
       };
-      console.log(JSON.stringify(whereOptions), 'no deberia');
     }
     if (isSorted) {
       findOptionsObject = this.sortBy(sortBy, findOptionsObject);

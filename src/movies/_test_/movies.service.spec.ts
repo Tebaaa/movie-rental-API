@@ -9,10 +9,12 @@ import { MovieEntity } from '../entities/movie.entity';
 import { MoviesService } from '../movies.service';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { CreateMovieDto } from '../dto/create-movie.dto';
+import { TagEntity } from '../entities/tags.entity';
 
 describe('MoviesService', () => {
   let service: MoviesService;
   let moviesRepository: MockRepository;
+  let tagsRepository: MockRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,6 +25,10 @@ describe('MoviesService', () => {
           provide: getRepositoryToken(MovieEntity),
           useValue: createMockRepository(),
         },
+        {
+          provide: getRepositoryToken(TagEntity),
+          useValue: createMockRepository(),
+        },
       ],
     }).compile();
 
@@ -30,6 +36,7 @@ describe('MoviesService', () => {
     moviesRepository = module.get<MockRepository>(
       getRepositoryToken(MovieEntity),
     );
+    tagsRepository = module.get<MockRepository>(getRepositoryToken(TagEntity));
   });
 
   it('should be defined', () => {
@@ -40,7 +47,7 @@ describe('MoviesService', () => {
     it('should return a list of movies', async () => {
       const expectedList = [];
       moviesRepository.find.mockReturnValue(expectedList);
-      const list = await service.findAll();
+      const list = await service.findAll({});
       expect(list).toEqual(expectedList);
     });
   });
@@ -77,7 +84,7 @@ describe('MoviesService', () => {
       rent_price: 10,
       sale_price: 20,
       stock: 2,
-      title: '',
+      name: '',
       trailer_url: '',
       tags: [],
     };
@@ -104,7 +111,7 @@ describe('MoviesService', () => {
 
   describe('update', () => {
     const movieId = 1;
-    const updateMovieDto = { title: 'new title' };
+    const updateMovieDto = { name: 'new title' };
     describe('when movie with ID exists', () => {
       it('should return an updated movie object', async () => {
         const expectedMovie = {};

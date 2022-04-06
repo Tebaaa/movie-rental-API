@@ -6,15 +6,15 @@ type SortOptions = 'name' | 'likes';
 export class QueryParamsDto {
   @IsOptional()
   @IsString()
-  sortBy: SortOptions;
+  sortBy?: SortOptions;
 
   @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
 
   @IsOptional()
   @IsString({ each: true })
-  tag: string | string[];
+  tag?: string | string[];
 
   @IsOptional()
   @Transform(({ value }) => {
@@ -27,5 +27,5 @@ export class QueryParamsDto {
     return 'bad request';
   })
   @IsBoolean()
-  available: boolean;
+  available?: boolean;
 }

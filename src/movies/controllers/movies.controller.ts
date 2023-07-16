@@ -11,7 +11,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/strategies/jwt/jwt-auth.guard';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CreateMovieDto } from '../dto/create-movie.dto';
 import { QueryParamsDto } from '../dto/query-params.dto';
 import { UpdateMovieDto } from '../dto/update-movie.dto';

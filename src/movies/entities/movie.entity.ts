@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RecordEntity } from '../../users/entities/record.entity';
-import { TagEntity } from './tags.entity';
+import { TagEntity } from './tag.entity';
 
 @Entity('movie')
 export class MovieEntity {

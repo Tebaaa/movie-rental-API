@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { MovieEntity } from '../../movies/entities/movie.entity';
-import { User } from './users.entity';
+import { User } from './user.entity';
 
 @Entity('record')
 export class RecordEntity {

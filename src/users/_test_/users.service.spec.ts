@@ -8,7 +8,7 @@ import {
 } from '../../create-mock-repository.class';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { IdDto } from '../dto/id.dto';
-import { User } from '../entities/users.entity';
+import { User } from '../entities/user.entity';
 import { UsersService } from '../services/users.service';
 
 describe('UsersService', () => {

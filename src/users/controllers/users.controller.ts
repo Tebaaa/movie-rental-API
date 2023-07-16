@@ -12,7 +12,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/strategies/jwt/jwt-auth.guard';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RentalActionDto } from '../../movies/dto/rental-action.dto';
 import { MovieRentalService } from '../../movies/services/movie-rental.service';
 import { AdminGuard } from '../../movies/guards/admin.guard';

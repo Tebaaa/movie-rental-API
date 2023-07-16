@@ -1,5 +1,5 @@
 import { MovieEntity } from '../entities/movie.entity';
-import { User } from '../../users/entities/users.entity';
+import { User } from '../../users/entities/user.entity';
 import { IOrderInfo } from '../interfaces/order-info.interface';
 
 export class OrderInfo implements IOrderInfo {

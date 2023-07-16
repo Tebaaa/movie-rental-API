@@ -1,5 +1,5 @@
 import { IdDto } from '../users/dto/id.dto';
-import { User } from '../users/entities/users.entity';
+import { User } from '../users/entities/user.entity';
 
 export const mockIdDto: IdDto = { id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2' };
 export const mockUser: User = {

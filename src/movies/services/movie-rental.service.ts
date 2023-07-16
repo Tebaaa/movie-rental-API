@@ -10,7 +10,7 @@ import { MailService } from '../../mail/services/mail.service';
 import { MovieEntity } from '../entities/movie.entity';
 import { IdDto } from '../../users/dto/id.dto';
 import { RecordEntity } from '../../users/entities/record.entity';
-import { User } from '../../users/entities/users.entity';
+import { User } from '../../users/entities/user.entity';
 import { OrderInfo } from '../classes/order-info.class';
 import { RentalActionDto } from '../dto/rental-action.dto';
 

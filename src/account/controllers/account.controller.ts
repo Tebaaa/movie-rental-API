@@ -8,7 +8,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/strategies/jwt/jwt-auth.guard';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { IdDto } from '../../users/dto/id.dto';
 import { CorrectIdGuard } from '../../users/guards/correct-id.guard';
 import { AccountService } from '../services/account.service';

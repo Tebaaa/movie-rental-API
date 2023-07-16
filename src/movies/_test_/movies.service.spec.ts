@@ -13,7 +13,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateMovieDto } from '../dto/create-movie.dto';
-import { TagEntity } from '../entities/tags.entity';
+import { TagEntity } from '../entities/tag.entity';
 
 describe('MoviesService', () => {
   let service: MoviesService;

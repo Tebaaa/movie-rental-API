@@ -10,7 +10,7 @@ import { CreateMovieDto } from '../dto/create-movie.dto';
 import { QueryParamsDto } from '../dto/query-params.dto';
 import { UpdateMovieDto } from '../dto/update-movie.dto';
 import { MovieEntity } from '../entities/movie.entity';
-import { TagEntity } from '../entities/tags.entity';
+import { TagEntity } from '../entities/tag.entity';
 
 @Injectable()
 export class MoviesService {

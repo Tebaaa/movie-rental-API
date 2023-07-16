@@ -5,7 +5,8 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { MovieEntity } from './movie.entity';
+
+import { MovieEntity } from './';
 
 @Entity('tag')
 export class TagEntity {

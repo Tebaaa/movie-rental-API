@@ -8,13 +8,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { IdDto } from '../../users/dto/id.dto';
-import { CorrectIdGuard } from '../../users/guards/correct-id.guard';
-import { AccountService } from '../services/account.service';
-import { ChangePasswordDto } from '../dto/change-password.dto';
-import { EmailDto } from '../dto/email.dto';
-import { ResetPasswordDto } from '../dto/reset-password.dto';
+
+import { JwtAuthGuard } from '@Auth/guards/';
+import { IdDto } from '@Users/dto';
+import { CorrectIdGuard } from '@Users/guards';
+
+import { ChangePasswordDto, EmailDto, ResetPasswordDto } from '../dto/';
+import { AccountService } from '../services/';
 
 @Controller('account')
 export class AccountController {
@@ -27,7 +27,7 @@ export class AccountController {
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Put('password')
+  @Put('password/reset')
   resetPassword(
     @Query() idDto: IdDto,
     @Body() resetPasswordDto: ResetPasswordDto,
@@ -37,7 +37,7 @@ export class AccountController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtAuthGuard, CorrectIdGuard)
-  @Put('password/:id')
+  @Put('password/change/:id')
   changePassword(
     @Param() idDto: IdDto,
     @Body() changePasswordDto: ChangePasswordDto,

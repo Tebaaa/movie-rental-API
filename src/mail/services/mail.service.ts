@@ -1,11 +1,13 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { OrderInfo } from '../../movies/classes/order-info.class';
-import { User } from '../../users/entities/user.entity';
+
+import { OrderInfo } from '@Movies/classes';
+import { User } from '@Users/entities';
 
 @Injectable()
 export class MailService {
   constructor(private mailerService: MailerService) {}
+  //TODO: use configService to get host & port
   host = process.env.SERVER_HOST;
   port = process.env.SERVER_PORT;
 

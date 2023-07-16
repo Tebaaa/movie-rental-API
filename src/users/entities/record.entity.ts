@@ -5,8 +5,10 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { MovieEntity } from '../../movies/entities/movie.entity';
-import { User } from './user.entity';
+
+import { MovieEntity } from '@Movies/entities';
+
+import { User } from './';
 
 @Entity('record')
 export class RecordEntity {

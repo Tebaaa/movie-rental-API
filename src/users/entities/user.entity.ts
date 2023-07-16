@@ -6,7 +6,8 @@ import {
   Index,
   OneToMany,
 } from 'typeorm';
-import { RecordEntity } from './record.entity';
+
+import { RecordEntity } from './';
 
 @Entity()
 export class User {

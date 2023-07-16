@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 export class CreateUserDto {
   @IsEmail()
+  @IsNotEmpty()
   readonly email: string;
 
   @IsString()
@@ -22,6 +23,7 @@ export class CreateUserDto {
   @IsString()
   readonly password: string;
 
+  //TODO: Create & Use Role Enum
   @IsBoolean()
   readonly admin: boolean;
 

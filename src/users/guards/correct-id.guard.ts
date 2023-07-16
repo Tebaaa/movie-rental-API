@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { IdDto } from '../dto/id.dto';
+
+import { IdDto } from '../dto/';
 
 @Injectable()
 export class CorrectIdGuard implements CanActivate {

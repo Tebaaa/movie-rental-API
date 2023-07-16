@@ -1,10 +1,10 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { MailService } from '../../mail/services/mail.service';
-import { IdDto } from '../../users/dto/id.dto';
-import { UsersService } from '../../users/services/users.service';
-import { ChangePasswordDto } from '../dto/change-password.dto';
-import { EmailDto } from '../dto/email.dto';
-import { ResetPasswordDto } from '../dto/reset-password.dto';
+
+import { UsersService } from '@Users/services';
+import { MailService } from '@Mail/services';
+import { IdDto } from '@Users/dto';
+
+import { ChangePasswordDto, EmailDto, ResetPasswordDto } from '../dto/';
 
 @Injectable()
 export class AccountService {

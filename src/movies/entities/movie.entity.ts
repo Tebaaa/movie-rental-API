@@ -6,8 +6,10 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { RecordEntity } from '../../users/entities/record.entity';
-import { TagEntity } from './tag.entity';
+
+import { RecordEntity } from '@Users/entities';
+
+import { TagEntity } from './';
 
 @Entity('movie')
 export class MovieEntity {

@@ -6,7 +6,9 @@ import {
   SwaggerDocumentOptions,
   SwaggerModule,
 } from '@nestjs/swagger';
+
 import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,6 +19,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  //TODO: Move config to config module
   const config = new DocumentBuilder()
     .setTitle('Movie Rental API')
     .setDescription(
@@ -43,6 +46,10 @@ async function bootstrap() {
   };
   SwaggerModule.setup('docs', app, document, customOptions);
 
-  await app.listen(process.env.SERVER_PORT, process.env.SERVER_HOST);
+  const configService = app.get(ConfigService);
+  await app.listen(
+    configService.get('SERVER_PORT'),
+    configService.get('SERVER_HOST'),
+  );
 }
 bootstrap();

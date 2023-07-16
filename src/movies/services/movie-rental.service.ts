@@ -6,13 +6,14 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MailService } from '../../mail/services/mail.service';
-import { MovieEntity } from '../entities/movie.entity';
-import { IdDto } from '../../users/dto/id.dto';
-import { RecordEntity } from '../../users/entities/record.entity';
-import { User } from '../../users/entities/user.entity';
-import { OrderInfo } from '../classes/order-info.class';
-import { RentalActionDto } from '../dto/rental-action.dto';
+
+import { RecordEntity, User } from '@Users/entities';
+import { MailService } from '@Mail/services';
+
+import { MovieEntity } from '../entities/';
+import { OrderInfo } from '../classes/';
+import { RentalActionDto } from '../dto/';
+import { IdDto } from '@Users/dto';
 
 @Injectable()
 export class MovieRentalService {

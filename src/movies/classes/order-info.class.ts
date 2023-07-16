@@ -1,6 +1,7 @@
-import { MovieEntity } from '../entities/movie.entity';
-import { User } from '../../users/entities/user.entity';
-import { IOrderInfo } from '../interfaces/order-info.interface';
+import { User } from '@Users/entities';
+
+import { MovieEntity } from '../entities/';
+import { IOrderInfo } from '../interfaces/';
 
 export class OrderInfo implements IOrderInfo {
   quantity: number;

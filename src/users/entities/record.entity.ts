@@ -21,6 +21,7 @@ export class RecordEntity {
   @Column()
   movie_id: number;
 
+  //TODO: Use enum for action
   @Column({ nullable: true })
   rent: boolean;
 

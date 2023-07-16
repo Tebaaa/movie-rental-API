@@ -28,6 +28,7 @@ export class MoviesService {
     let whereOptions = {};
     let findOptionsObject = {};
     if (isTagFiltered) {
+      //TODO: implement tag filter
       console.log('falta implementar tag filter');
     }
     if (isNameFiltered) {

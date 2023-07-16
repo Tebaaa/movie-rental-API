@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateMovieDto } from '../dto/create-movie.dto';
-import { MoviesController } from '../movies.controller';
-import { MoviesService } from '../movies.service';
+import { MoviesController } from '../controllers/movies.controller';
+import { MoviesService } from '../services/movies.service';
 describe('MoviesController', () => {
   let controller: MoviesController;
 

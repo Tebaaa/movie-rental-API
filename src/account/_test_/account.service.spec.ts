@@ -1,9 +1,9 @@
 import { ConflictException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { MailService } from '../../mail/mail.service';
-import { UsersService } from '../../users/users.service';
+import { MailService } from '../../mail/services/mail.service';
+import { UsersService } from '../../users/services/users.service';
 import { mockIdDto } from '../../_test_mocks_/user-service.mock';
-import { AccountService } from '../account.service';
+import { AccountService } from '../services/account.service';
 import { ChangePasswordDto } from '../dto/change-password.dto';
 import { EmailDto } from '../dto/email.dto';
 import { ResetPasswordDto } from '../dto/reset-password.dto';

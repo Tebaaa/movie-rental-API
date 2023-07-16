@@ -11,12 +11,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
-import { CreateMovieDto } from './dto/create-movie.dto';
-import { QueryParamsDto } from './dto/query-params.dto';
-import { UpdateMovieDto } from './dto/update-movie.dto';
-import { AdminGuard } from './guards/admin.guard';
-import { MoviesService } from './movies.service';
+import { JwtAuthGuard } from '../../auth/strategies/jwt/jwt-auth.guard';
+import { CreateMovieDto } from '../dto/create-movie.dto';
+import { QueryParamsDto } from '../dto/query-params.dto';
+import { UpdateMovieDto } from '../dto/update-movie.dto';
+import { AdminGuard } from '../guards/admin.guard';
+import { MoviesService } from '../services/movies.service';
 
 @Controller('movies')
 export class MoviesController {

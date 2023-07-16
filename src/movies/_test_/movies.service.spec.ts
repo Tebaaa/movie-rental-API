@@ -6,7 +6,7 @@ import {
 } from '../../create-mock-repository.class';
 import { Connection } from 'typeorm';
 import { MovieEntity } from '../entities/movie.entity';
-import { MoviesService } from '../movies.service';
+import { MoviesService } from '../services/movies.service';
 import {
   BadRequestException,
   ConflictException,

@@ -6,7 +6,6 @@ import { MoviesModule } from './movies/movies.module';
 import { AuthModule } from './auth/auth.module';
 import { AccountModule } from './account/account.module';
 import { MailModule } from './mail/mail.module';
-import { MovieRentalModule } from './movie-rental/movie-rental.module';
 import { DataSourceConfig } from './config/data-source.config';
 
 @Module({
@@ -18,7 +17,6 @@ import { DataSourceConfig } from './config/data-source.config';
     AuthModule,
     AccountModule,
     MailModule,
-    MovieRentalModule,
   ],
 })
 export class AppModule {}

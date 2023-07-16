@@ -12,16 +12,16 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
-import { RentalActionDto } from '../movie-rental/dto/rental-action.dto';
-import { MovieRentalService } from '../movie-rental/movie-rental.service';
-import { AdminGuard } from '../movies/guards/admin.guard';
-import { ClientGuard } from '../movies/guards/client.guard';
-import { CreateUserDto } from './dto/create-user.dto';
-import { IdDto } from './dto/id.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { CorrectIdGuard } from './guards/correct-id.guard';
-import { UsersService } from './users.service';
+import { JwtAuthGuard } from '../../auth/strategies/jwt/jwt-auth.guard';
+import { RentalActionDto } from '../../movies/dto/rental-action.dto';
+import { MovieRentalService } from '../../movies/services/movie-rental.service';
+import { AdminGuard } from '../../movies/guards/admin.guard';
+import { ClientGuard } from '../../movies/guards/client.guard';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { IdDto } from '../dto/id.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { CorrectIdGuard } from '../guards/correct-id.guard';
+import { UsersService } from '../services/users.service';
 
 @Controller('users')
 export class UsersController {

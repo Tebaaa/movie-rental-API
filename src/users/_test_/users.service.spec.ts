@@ -9,7 +9,7 @@ import {
 import { CreateUserDto } from '../dto/create-user.dto';
 import { IdDto } from '../dto/id.dto';
 import { User } from '../entities/users.entity';
-import { UsersService } from '../users.service';
+import { UsersService } from '../services/users.service';
 
 describe('UsersService', () => {
   let service: UsersService;

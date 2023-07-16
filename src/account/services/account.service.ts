@@ -1,10 +1,10 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { MailService } from '../mail/mail.service';
-import { IdDto } from '../users/dto/id.dto';
-import { UsersService } from '../users/users.service';
-import { ChangePasswordDto } from './dto/change-password.dto';
-import { EmailDto } from './dto/email.dto';
-import { ResetPasswordDto } from './dto/reset-password.dto';
+import { MailService } from '../../mail/services/mail.service';
+import { IdDto } from '../../users/dto/id.dto';
+import { UsersService } from '../../users/services/users.service';
+import { ChangePasswordDto } from '../dto/change-password.dto';
+import { EmailDto } from '../dto/email.dto';
+import { ResetPasswordDto } from '../dto/reset-password.dto';
 
 @Injectable()
 export class AccountService {
@@ -18,6 +18,7 @@ export class AccountService {
     return await this.mailService.sendPasswordReset(user);
   }
 
+  //TODO: Use Bcrypt & regex
   async resetPassword(idDto: IdDto, resetPasswordDto: ResetPasswordDto) {
     const { newPassword, newPasswordConfirmation } = resetPasswordDto;
     const confirmationIsOk = newPassword === newPasswordConfirmation;

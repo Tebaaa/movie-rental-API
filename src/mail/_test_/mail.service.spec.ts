@@ -1,8 +1,8 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Test, TestingModule } from '@nestjs/testing';
-import { OrderInfo } from '../../movie-rental/classes/order-info.class';
+import { OrderInfo } from '../../movies/classes/order-info.class';
 import { mockUser } from '../../_test_mocks_/user-service.mock';
-import { MailService } from '../mail.service';
+import { MailService } from '../services/mail.service';
 
 describe('MailService', () => {
   let service: MailService;

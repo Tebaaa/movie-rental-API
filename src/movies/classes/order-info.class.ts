@@ -1,4 +1,4 @@
-import { MovieEntity } from '../../movies/entities/movie.entity';
+import { MovieEntity } from '../entities/movie.entity';
 import { User } from '../../users/entities/users.entity';
 import { IOrderInfo } from '../interfaces/order-info.interface';
 

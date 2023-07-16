@@ -6,13 +6,13 @@ import {
   createMockRepository,
   MockRepository,
 } from '../../create-mock-repository.class';
-import { MailService } from '../../mail/mail.service';
-import { MovieEntity } from '../../movies/entities/movie.entity';
+import { MailService } from '../../mail/services/mail.service';
+import { MovieEntity } from '../entities/movie.entity';
 import { RecordEntity } from '../../users/entities/record.entity';
 import { User } from '../../users/entities/users.entity';
 import { mockIdDto, mockUser } from '../../_test_mocks_/user-service.mock';
 import { RentalActionDto } from '../dto/rental-action.dto';
-import { MovieRentalService } from '../movie-rental.service';
+import { MovieRentalService } from '../services/movie-rental.service';
 
 describe('MovieRentalService', () => {
   let service: MovieRentalService;

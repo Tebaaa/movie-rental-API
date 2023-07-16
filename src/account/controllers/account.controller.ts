@@ -8,13 +8,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard';
-import { IdDto } from '../users/dto/id.dto';
-import { CorrectIdGuard } from '../users/guards/correct-id.guard';
-import { AccountService } from './account.service';
-import { ChangePasswordDto } from './dto/change-password.dto';
-import { EmailDto } from './dto/email.dto';
-import { ResetPasswordDto } from './dto/reset-password.dto';
+import { JwtAuthGuard } from '../../auth/strategies/jwt/jwt-auth.guard';
+import { IdDto } from '../../users/dto/id.dto';
+import { CorrectIdGuard } from '../../users/guards/correct-id.guard';
+import { AccountService } from '../services/account.service';
+import { ChangePasswordDto } from '../dto/change-password.dto';
+import { EmailDto } from '../dto/email.dto';
+import { ResetPasswordDto } from '../dto/reset-password.dto';
 
 @Controller('account')
 export class AccountController {

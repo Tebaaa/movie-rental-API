@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockIdDto } from '../../_test_mocks_/user-service.mock';
-import { AccountController } from '../account.controller';
-import { AccountService } from '../account.service';
+import { AccountController } from '../controllers/account.controller';
+import { AccountService } from '../services/account.service';
 import { ChangePasswordDto } from '../dto/change-password.dto';
 import { EmailDto } from '../dto/email.dto';
 import { ResetPasswordDto } from '../dto/reset-password.dto';

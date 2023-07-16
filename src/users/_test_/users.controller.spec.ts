@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RentalActionDto } from '../../movie-rental/dto/rental-action.dto';
-import { MovieRentalService } from '../../movie-rental/movie-rental.service';
+import { RentalActionDto } from '../../movies/dto/rental-action.dto';
+import { MovieRentalService } from '../../movies/services/movie-rental.service';
 import {
   mockIdDto,
   mockUserService,
@@ -8,8 +8,8 @@ import {
 } from '../../_test_mocks_/user-service.mock';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { UsersController } from '../users.controller';
-import { UsersService } from '../users.service';
+import { UsersController } from '../controllers/users.controller';
+import { UsersService } from '../services/users.service';
 
 describe('UsersController', () => {
   let controller: UsersController;

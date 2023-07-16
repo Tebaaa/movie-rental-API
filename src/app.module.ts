@@ -7,20 +7,12 @@ import { AuthModule } from './auth/auth.module';
 import { AccountModule } from './account/account.module';
 import { MailModule } from './mail/mail.module';
 import { MovieRentalModule } from './movie-rental/movie-rental.module';
+import { DataSourceConfig } from './config/data-source.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DATABASE_HOST,
-      port: +process.env.DATABASE_PORT,
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRoot({ ...DataSourceConfig }),
     UsersModule,
     MoviesModule,
     AuthModule,

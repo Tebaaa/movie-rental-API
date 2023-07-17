@@ -1,4 +1,3 @@
-//TODO: Finish Repository
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -10,5 +9,13 @@ export class UsersRepository extends Repository<User> {
     private repository: Repository<User>,
   ) {
     super(repository.target, repository.manager, repository.queryRunner);
+  }
+
+  async findOneUserById(id: string): Promise<User> {
+    return this.repository.findOne({ where: { id } });
+  }
+
+  async findOneUserByEmail(email: string): Promise<User> {
+    return this.repository.findOne({ where: { email } });
   }
 }

@@ -38,7 +38,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   getById(@Param() idDto: IdParamDto) {
-    return this.usersService.findById(idDto);
+    return this.usersService.findById(idDto.id);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -52,14 +52,14 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Patch(':id')
   update(@Param() idDto: IdParamDto, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(idDto, updateUserDto);
+    return this.usersService.update(idDto.id, updateUserDto);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param() idDto: IdParamDto) {
-    return this.usersService.delete(idDto);
+    return this.usersService.delete(idDto.id);
   }
 
   @UseGuards(JwtAuthGuard, CorrectIdGuard, ClientGuard)
@@ -75,6 +75,7 @@ export class UsersController {
     @Param() idDto: IdParamDto,
     @Body() rentalActionDto: RentalActionDto,
   ) {
+    //TODO: create method in users service and emit an event
     return this.movieRentalService.executeAction(idDto, rentalActionDto);
   }
 }

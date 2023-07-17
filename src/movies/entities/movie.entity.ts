@@ -1,12 +1,23 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity()
+import { RecordEntity } from '@Users/entities';
+
+import { TagEntity } from './';
+
+@Entity('movie')
 export class MovieEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  title: string;
+  name: string;
 
   @Column()
   description: string;
@@ -32,6 +43,10 @@ export class MovieEntity {
   @Column()
   available: boolean;
 
-  @Column('json', { nullable: true })
-  tags: string[];
+  @JoinTable()
+  @ManyToMany((type) => TagEntity, (tag) => tag.movies)
+  tags: TagEntity[];
+
+  @OneToMany((type) => RecordEntity, (record) => record.movie)
+  record: RecordEntity[];
 }

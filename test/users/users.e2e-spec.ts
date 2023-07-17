@@ -2,7 +2,7 @@ import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as request from 'supertest';
-import { JwtAuthGuard } from '../../src/auth/strategies/jwt/jwt-auth.guard';
+import { JwtAuthGuard } from '../../src/auth/guards/jwt-auth.guard';
 import { AdminGuard } from '../../src/movies/guards/admin.guard';
 import { CreateUserDto } from '../../src/users/dto/create-user.dto';
 import { UsersModule } from '../../src/users/users.module';

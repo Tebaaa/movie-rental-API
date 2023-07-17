@@ -1,74 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MovieEntity } from '../entities/movie.entity';
-import { MoviesController } from '../movies.controller';
+import { CreateMovieDto } from '../dto/create-movie.dto';
+import { MoviesController } from '../controllers/movies.controller';
 import { MoviesService } from '../services/movies.service';
-import { RentalServices } from '../services/rental-services.service';
-
 describe('MoviesController', () => {
   let controller: MoviesController;
 
-  const mockMovieId = 3;
-  const mockUpdateMovieDto = {
-    title: 'new title',
-  };
-  const mockCreateMovieDto = {
-    title: 'title',
-    available: true,
-    description: 'description',
-    likes: 3,
-    poster: 'poster',
-    rent_price: 10,
-    sale_price: 20,
-    stock: 2,
-    tags: [],
-    trailer_url: 'url',
-  };
-  const mockMovie: MovieEntity = {
-    id: 1,
-    ...mockCreateMovieDto,
-  };
-  const mockMoviesList: MovieEntity[] = [
-    mockMovie,
-    {
-      ...mockMovie,
-      id: 2,
-    },
-    {
-      ...mockMovie,
-      id: 3,
-    },
-  ];
   const mockMoviesService = {
-    findAll: jest.fn(() => mockMoviesList),
-    findById: jest.fn((id: number) => {
-      return mockMoviesList.find((movie) => movie.id === id);
-    }),
-    create: jest.fn((dto) => {
-      return {
-        id: 4,
-        ...dto,
-      };
-    }),
-    update: jest.fn((id: number, dto) => {
-      const movie = mockMoviesList.find((movie) => movie.id === id);
-      return {
-        ...movie,
-        ...dto,
-      };
-    }),
-    delete: jest.fn((id: number) => {
-      return mockMoviesList.find((movie) => movie.id === id);
-    }),
+    findAll: jest.fn(),
+    findById: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
   };
-  const mockRentalService = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MoviesController],
-      providers: [
-        { provide: MoviesService, useValue: mockMoviesService },
-        { provide: RentalServices, useValue: mockRentalService },
-      ],
+      providers: [{ provide: MoviesService, useValue: mockMoviesService }],
     }).compile();
 
     controller = module.get<MoviesController>(MoviesController);
@@ -78,42 +26,52 @@ describe('MoviesController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should get a list of movies', () => {
-    expect(controller.getAll()).toEqual(mockMoviesList);
+  it('should get a list of movies', async () => {
+    const expectedMovies = [{}];
+    const queryParamsDto = {};
+    mockMoviesService.findAll.mockReturnValue(expectedMovies);
+    const returnValue = await controller.getAll(queryParamsDto);
+    expect(returnValue).toEqual(expectedMovies);
   });
 
-  it('should get a movie by its id', () => {
-    const expectedMovie = mockMoviesList.find(
-      (movie) => movie.id === mockMovieId,
-    );
-    expect(controller.getById(mockMovieId)).toEqual(expectedMovie);
+  it('should get a movie by its id', async () => {
+    const expectedMovie = {};
+    mockMoviesService.findById.mockReturnValue(expectedMovie);
+    const returnValue = await controller.getById(1);
+    expect(returnValue).toEqual(expectedMovie);
   });
 
-  it('should create a movie', () => {
-    expect(controller.create(mockCreateMovieDto)).toEqual({
-      id: expect.any(Number),
-      ...mockCreateMovieDto,
-    });
-  });
-
-  it('should update a movie', () => {
-    const findedMovie = mockMoviesList.find(
-      (movie) => movie.id === mockMovieId,
-    );
-    const expectedMovie = {
-      ...findedMovie,
-      ...mockUpdateMovieDto,
+  it('should create a movie', async () => {
+    const expectedReturn = {};
+    const createMovieDto: CreateMovieDto = {
+      available: true,
+      description: '',
+      likes: 2,
+      name: '',
+      poster: '',
+      rent_price: 1,
+      sale_price: 1,
+      stock: 1,
+      trailer_url: '',
+      tags: [],
     };
-
-    expect(controller.update(mockUpdateMovieDto, mockMovieId)).toEqual(
-      expectedMovie,
-    );
+    mockMoviesService.create.mockReturnValue(expectedReturn);
+    const returnValue = await controller.create(createMovieDto);
+    expect(returnValue).toEqual(expectedReturn);
   });
 
-  it('should delete a movie', () => {
-    const expectedMovie = mockMoviesList.find(
-      (movie) => movie.id === mockMovieId,
-    );
-    expect(controller.delete(mockMovieId)).toEqual(expectedMovie);
+  it('should update a movie', async () => {
+    const expectedReturn = {};
+    const updateMovieDto = { rent_price: 1 };
+    mockMoviesService.update.mockReturnValue(expectedReturn);
+    const returnValue = await controller.update(updateMovieDto, 1);
+    expect(returnValue).toEqual(expectedReturn);
+  });
+
+  it('should delete a movie', async () => {
+    const expectedReturn = {};
+    mockMoviesService.delete.mockReturnValue(expectedReturn);
+    const returnValue = await controller.delete(1);
+    expect(returnValue).toEqual(expectedReturn);
   });
 });

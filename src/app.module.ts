@@ -1,26 +1,23 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
-import { MoviesModule } from './movies/movies.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+
+import { UsersModule } from '@Users/users.module';
+import { MoviesModule } from '@Movies/movies.module';
+import { AuthModule } from '@Auth/auth.module';
+import { AccountModule } from '@Account/account.module';
+import { MailModule } from '@Mail/mail.module';
+import { DataSourceConfig } from './config/';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DATABASE_HOST,
-      port: +process.env.DATABASE_PORT,
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRoot({ ...DataSourceConfig }),
     UsersModule,
     MoviesModule,
     AuthModule,
+    AccountModule,
+    MailModule,
   ],
 })
 export class AppModule {}

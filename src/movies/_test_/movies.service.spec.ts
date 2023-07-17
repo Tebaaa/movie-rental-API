@@ -7,12 +7,18 @@ import {
 import { Connection } from 'typeorm';
 import { MovieEntity } from '../entities/movie.entity';
 import { MoviesService } from '../services/movies.service';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateMovieDto } from '../dto/create-movie.dto';
+import { TagEntity } from '../entities/tag.entity';
 
 describe('MoviesService', () => {
   let service: MoviesService;
   let moviesRepository: MockRepository;
+  let tagsRepository: MockRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,6 +29,10 @@ describe('MoviesService', () => {
           provide: getRepositoryToken(MovieEntity),
           useValue: createMockRepository(),
         },
+        {
+          provide: getRepositoryToken(TagEntity),
+          useValue: createMockRepository(),
+        },
       ],
     }).compile();
 
@@ -30,6 +40,7 @@ describe('MoviesService', () => {
     moviesRepository = module.get<MockRepository>(
       getRepositoryToken(MovieEntity),
     );
+    tagsRepository = module.get<MockRepository>(getRepositoryToken(TagEntity));
   });
 
   it('should be defined', () => {
@@ -40,7 +51,7 @@ describe('MoviesService', () => {
     it('should return a list of movies', async () => {
       const expectedList = [];
       moviesRepository.find.mockReturnValue(expectedList);
-      const list = await service.findAll();
+      const list = await service.findAll({});
       expect(list).toEqual(expectedList);
     });
   });
@@ -77,7 +88,7 @@ describe('MoviesService', () => {
       rent_price: 10,
       sale_price: 20,
       stock: 2,
-      title: '',
+      name: '',
       trailer_url: '',
       tags: [],
     };
@@ -104,7 +115,7 @@ describe('MoviesService', () => {
 
   describe('update', () => {
     const movieId = 1;
-    const updateMovieDto = { title: 'new title' };
+    const updateMovieDto = { name: 'new title' };
     describe('when movie with ID exists', () => {
       it('should return an updated movie object', async () => {
         const expectedMovie = {};
@@ -146,6 +157,53 @@ describe('MoviesService', () => {
         } catch (err) {
           expect(err).toBeInstanceOf(NotFoundException);
           expect(err.message).toEqual(`Movie #${movieId} not found`);
+        }
+      });
+    });
+  });
+  describe('sortBy', () => {
+    describe(`when sorter is 'name'`, () => {
+      it('should return object with name property', async () => {
+        const expectedObject = { order: { name: 'ASC' } };
+        const returnedObject = service.sortBy('name', {});
+        expect(expectedObject).toEqual(returnedObject);
+      });
+    });
+    describe(`when sorter is 'likes'`, () => {
+      it('should return object with likes property', async () => {
+        const expectedObject = { order: { likes: 'DESC' } };
+        const returnedObject = service.sortBy('likes', {});
+        expect(expectedObject).toEqual(returnedObject);
+      });
+    });
+    describe('otherwise', () => {
+      it('should throw a BadRequestException', () => {
+        try {
+          service.sortBy('bla', {});
+        } catch (err) {
+          expect(err).toBeInstanceOf(BadRequestException);
+          expect(err.message).toContain('sort value');
+        }
+      });
+    });
+  });
+  describe('preloadTagByName', () => {
+    describe('when tag with name exists', () => {
+      it('should return a TagEntity object', async () => {
+        const expectedTag = {};
+        tagsRepository.findOne.mockReturnValue(expectedTag);
+        const returnedTag = await service.preloadTagByName('');
+        expect(returnedTag).toEqual(expectedTag);
+      });
+    });
+    describe('otherwise', () => {
+      it('should throw a NotFoundException', async () => {
+        tagsRepository.findOne.mockReturnValue(undefined);
+        try {
+          await service.preloadTagByName('tag name');
+        } catch (error) {
+          expect(error).toBeInstanceOf(NotFoundException);
+          expect(error.message).toContain(`doesn't exist`);
         }
       });
     });

@@ -6,8 +6,10 @@ import {
   createMockRepository,
   MockRepository,
 } from '../../create-mock-repository.class';
-import { User } from '../entities/users.entity';
-import { UsersService } from '../users.service';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { IdDto } from '../dto/id.dto';
+import { User } from '../entities/user.entity';
+import { UsersService } from '../services/users.service';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -41,32 +43,34 @@ describe('UsersService', () => {
   describe('findById', () => {
     describe('when user with Id exists', () => {
       it('should return the user object', async () => {
-        const userId = 1;
+        const mockIdDto: IdDto = { id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2' };
         const expectedUser = {};
         usersRepository.findOne.mockReturnValue(expectedUser);
-        const user = await service.findById(userId);
+        const user = await service.findById(mockIdDto);
         expect(user).toEqual(expectedUser);
       });
     });
     describe('otherwise', () => {
       it('should throw the "NotFoundException"', async () => {
-        const userId = 1;
+        const mockIdDto: IdDto = { id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2' };
         usersRepository.findOne.mockReturnValue(undefined);
         try {
-          await service.findById(userId);
+          await service.findById(mockIdDto);
         } catch (error) {
           expect(error).toBeInstanceOf(NotFoundException);
-          expect(error.message).toEqual(`User #${userId} not found`);
+          expect(error.message).toEqual(`User #${mockIdDto.id} not found`);
         }
       });
     });
   });
 
   describe('create', () => {
-    const createUserDto = {
-      username: 'admin',
+    const createUserDto: CreateUserDto = {
+      email: 'admin@mail.com',
       password: '123',
-      role: 'admin',
+      admin: true,
+      client: true,
+      name: 'name',
     };
     const expectedCreatedUser = {};
     describe('if username has not been used', () => {
@@ -84,21 +88,21 @@ describe('UsersService', () => {
           await service.create(createUserDto);
         } catch (err) {
           expect(err).toBeInstanceOf(ConflictException);
-          expect(err.message).toEqual('Username has already been taken ');
+          expect(err.message).toEqual('Email is already registered');
         }
       });
     });
   });
 
   describe('update', () => {
-    const userId = 1;
-    const updateUser = { username: 'username' };
+    const mockIdDto: IdDto = { id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2' };
+    const updateUser = { lastname: 'lastname' };
     describe('when user with id exists', () => {
       it('should return an updated user', async () => {
         const expectedSavedUser = {};
         usersRepository.preload.mockReturnValue(expectedSavedUser);
         usersRepository.save.mockReturnValue(expectedSavedUser);
-        const savedUser = await service.update(userId, updateUser);
+        const savedUser = await service.update(mockIdDto, updateUser);
         expect(savedUser).toEqual(expectedSavedUser);
       });
     });
@@ -106,23 +110,23 @@ describe('UsersService', () => {
       it('should throw a NotFoundException', async () => {
         try {
           usersRepository.preload.mockReturnValue(undefined);
-          await service.update(userId, updateUser);
+          await service.update(mockIdDto, updateUser);
         } catch (err) {
           expect(err).toBeInstanceOf(NotFoundException);
-          expect(err.message).toEqual(`User #${userId} not found`);
+          expect(err.message).toEqual(`User #${mockIdDto.id} not found`);
         }
       });
     });
   });
 
   describe('delete', () => {
-    const userId = 1;
+    const mockIdDto: IdDto = { id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2' };
     describe('when user with id exists', () => {
       it('should return a deleted user', async () => {
         const expectedUser = {};
         usersRepository.findOne.mockReturnValue(expectedUser);
         usersRepository.remove.mockReturnValue(expectedUser);
-        const deletedUser = await service.delete(userId);
+        const deletedUser = await service.delete(mockIdDto);
         expect(deletedUser).toEqual(expectedUser);
       });
     });
@@ -130,22 +134,22 @@ describe('UsersService', () => {
       it('should throw a NotFoundException', async () => {
         try {
           usersRepository.findOne.mockReturnValue(undefined);
-          await service.delete(userId);
+          await service.delete(mockIdDto);
         } catch (err) {
           expect(err).toBeInstanceOf(NotFoundException);
-          expect(err.message).toEqual(`User #${userId} not found`);
+          expect(err.message).toEqual(`User #${mockIdDto.id} not found`);
         }
       });
     });
   });
 
-  describe('findByUsername', () => {
-    const username = 'username';
-    describe('when username exists', () => {
+  describe('findByEmail', () => {
+    const email = 'mail@mail.com';
+    describe('when email exists', () => {
       it('should return a user object', async () => {
         const expectedUser = {};
         usersRepository.findOne.mockReturnValue(expectedUser);
-        const user = await service.findByUsername(username);
+        const user = await service.findByEmail(email);
         expect(user).toEqual(expectedUser);
       });
     });
@@ -153,10 +157,10 @@ describe('UsersService', () => {
       it('should throw a NotFoundException', async () => {
         usersRepository.findOne.mockReturnValue(undefined);
         try {
-          await service.findByUsername(username);
+          await service.findByEmail(email);
         } catch (err) {
           expect(err).toBeInstanceOf(NotFoundException);
-          expect(err.message).toEqual(`Username doesn't exist`);
+          expect(err.message).toEqual(`There's no user with that email`);
         }
       });
     });

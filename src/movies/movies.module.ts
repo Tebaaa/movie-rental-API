@@ -6,7 +6,11 @@ import { User } from '@Users/entities/';
 import { MovieEntity, RecordEntity, TagEntity } from './entities/';
 import { MoviesController } from './controllers/';
 import { MovieRentalService, MoviesService } from './services';
-import { MoviesRepository, RecordsRepository } from './repositories';
+import {
+  MoviesRepository,
+  RecordsRepository,
+  TagsRepository,
+} from './repositories';
 
 @Module({
   imports: [
@@ -18,6 +22,7 @@ import { MoviesRepository, RecordsRepository } from './repositories';
     MovieRentalService,
     RecordsRepository,
     MoviesRepository,
+    TagsRepository,
   ],
   exports: [MoviesService, MovieRentalService],
 })

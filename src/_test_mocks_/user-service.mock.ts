@@ -1,7 +1,9 @@
-import { IdDto } from '../users/dto/id.dto';
-import { User } from '../users/entities/user.entity';
+import { IdParamDto } from '@Core/dtos';
+import { User } from '@Users/entities/';
 
-export const mockIdDto: IdDto = { id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2' };
+export const mockIdDto: IdParamDto = {
+  id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2',
+};
 export const mockUser: User = {
   id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2',
   email: 'email@example.com',
@@ -10,7 +12,7 @@ export const mockUser: User = {
   admin: true,
   client: true,
   lastname: 'lastname',
-  record: [],
+  records: [],
 };
 export const mockUsersList: User[] = [
   { ...mockUser },
@@ -26,7 +28,7 @@ export const mockUsersList: User[] = [
 
 export const mockUserService = {
   findAll: jest.fn(() => ['test']),
-  findById: jest.fn((idDto: IdDto): User => {
+  findById: jest.fn((idDto: IdParamDto): User => {
     return mockUsersList.find((user) => user.id === idDto.id);
   }),
   create: jest.fn((dto): User => {
@@ -41,7 +43,7 @@ export const mockUserService = {
       ...dto,
     };
   }),
-  delete: jest.fn((idDto: IdDto): User => {
+  delete: jest.fn((idDto: IdParamDto): User => {
     return mockUsersList.find((user) => user.id === idDto.id);
   }),
   findByEmail: jest.fn(),

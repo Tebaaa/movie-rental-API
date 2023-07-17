@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 
 import { User } from '@Users/entities';
 import { MailService } from '@Mail/services';
-import { IdDto } from '@Users/dto';
+import { IdParamDto } from '@Core/dtos';
 
 import { MovieEntity } from '../entities/';
 import { OrderInfo } from '../classes/';
@@ -26,7 +26,8 @@ export class MovieRentalService {
     private mailService: MailService,
   ) {}
 
-  getRecord(idDto: IdDto) {
+  getRecord(idDto: IdParamDto) {
+    //TODO: Make method in recordRepository
     return this.recordRepository.find({
       where: { user_id: idDto.id },
       relations: ['movie'],
@@ -125,11 +126,12 @@ export class MovieRentalService {
     );
   }
 
-  async executeAction(idDto: IdDto, rentalActionDto: RentalActionDto) {
+  async executeAction(idDto: IdParamDto, rentalActionDto: RentalActionDto) {
     const { action, moviesId } = rentalActionDto;
     const actionIsBuy = action === 'buy';
     const actionIsRent = action === 'rent';
     const actionIsReturn = action === 'return';
+    //TODO: Use event emitter
     const user = await this.userRepository.findOne(idDto.id);
     if (!user) {
       throw new NotFoundException(`User #${idDto.id} not found`);

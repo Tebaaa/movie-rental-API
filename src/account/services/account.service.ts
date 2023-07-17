@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 
 import { UsersService } from '@Users/services';
 import { MailService } from '@Mail/services';
-import { IdDto } from '@Users/dto';
+import { IdParamDto } from '@Core/dtos';
 
 import { ChangePasswordDto, EmailDto, ResetPasswordDto } from '../dto/';
 
@@ -19,7 +19,7 @@ export class AccountService {
   }
 
   //TODO: Use Bcrypt & regex
-  async resetPassword(idDto: IdDto, resetPasswordDto: ResetPasswordDto) {
+  async resetPassword(idDto: IdParamDto, resetPasswordDto: ResetPasswordDto) {
     const { newPassword, newPasswordConfirmation } = resetPasswordDto;
     const confirmationIsOk = newPassword === newPasswordConfirmation;
     const updatePassword = { password: newPassword };
@@ -29,7 +29,10 @@ export class AccountService {
     throw new ConflictException('Passwords must match');
   }
 
-  async changePassword(idDto: IdDto, changePasswordDto: ChangePasswordDto) {
+  async changePassword(
+    idDto: IdParamDto,
+    changePasswordDto: ChangePasswordDto,
+  ) {
     const user = await this.usersService.findById(idDto);
     const { oldPassword, newPassword, newPasswordConfirmation } =
       changePasswordDto;

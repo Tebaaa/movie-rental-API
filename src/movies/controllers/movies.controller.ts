@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 
 import { JwtAuthGuard } from '@Auth/guards';
+import { IdParamDto } from '@Core/dtos';
 
 import { CreateMovieDto, QueryParamsDto, UpdateMovieDto } from '../dto/';
 import { AdminGuard } from '../guards/';
@@ -28,8 +29,8 @@ export class MoviesController {
   }
 
   @Get(':id')
-  getById(@Param('id') id: number) {
-    return this.moviesService.findById(id);
+  getById(@Param() id: IdParamDto) {
+    return this.moviesService.findById(id.id);
   }
 
   @UseGuards(JwtAuthGuard, AdminGuard)
@@ -40,14 +41,14 @@ export class MoviesController {
 
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Patch(':id')
-  update(@Body() updateMovieDto: UpdateMovieDto, @Param('id') id: number) {
-    return this.moviesService.update(id, updateMovieDto);
+  update(@Body() updateMovieDto: UpdateMovieDto, @Param() id: IdParamDto) {
+    return this.moviesService.update(id.id, updateMovieDto);
   }
 
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id') id: number) {
-    return this.moviesService.delete(id);
+  delete(@Param() id: IdParamDto) {
+    return this.moviesService.delete(id.id);
   }
 }

@@ -3,49 +3,44 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
-import { CreateUserDto, IdDto, UpdateUserDto } from '../dto/';
-import { User } from '../entities/';
+import { CreateUserDto, UpdateUserDto } from '../dto/';
+import { UsersRepository } from '../repositories';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-  ) {}
+  constructor(private readonly userRepository: UsersRepository) {}
   findAll() {
     return this.userRepository.find();
   }
-  async findById(idDto: IdDto) {
-    const user = await this.userRepository.findOne(idDto.id);
-    if (!user) throw new NotFoundException(`User #${idDto.id} not found`);
+  async findById(id: string) {
+    const user = await this.userRepository.findOneUserById(id);
+    if (!user) throw new NotFoundException(`User #${id} not found`);
     return user;
   }
   async create(createUserDto: CreateUserDto) {
-    const existingEmail = await this.userRepository.findOne({
-      email: createUserDto.email,
-    });
+    const existingEmail = await this.userRepository.findOneUserByEmail(
+      createUserDto.email,
+    );
     if (existingEmail)
       throw new ConflictException('Email is already registered');
     const newUser = this.userRepository.create(createUserDto);
     return this.userRepository.save(newUser);
   }
-  async update(idDto: IdDto, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.userRepository.preload({
       ...updateUserDto,
-      id: idDto.id,
+      id,
     });
-    if (!user) throw new NotFoundException(`User #${idDto.id} not found`);
+    if (!user) throw new NotFoundException(`User #${id} not found`);
     return this.userRepository.save(user);
   }
-  async delete(idDto: IdDto) {
-    const user = await this.findById(idDto);
+  async delete(id: string) {
+    const user = await this.findById(id);
     return this.userRepository.remove(user);
   }
   async findByEmail(email: string) {
-    const user = await this.userRepository.findOne({ email: email });
+    const user = await this.userRepository.findOneUserByEmail(email);
     if (!user) throw new NotFoundException(`There's no user with that email`);
     return user;
   }

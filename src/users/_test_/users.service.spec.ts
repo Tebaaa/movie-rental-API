@@ -2,12 +2,14 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
+
+import { IdParamDto } from '@Core/dtos';
+
 import {
   createMockRepository,
   MockRepository,
 } from '../../create-mock-repository.class';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { IdDto } from '../dto/id.dto';
 import { User } from '../entities/user.entity';
 import { UsersService } from '../services/users.service';
 
@@ -43,7 +45,9 @@ describe('UsersService', () => {
   describe('findById', () => {
     describe('when user with Id exists', () => {
       it('should return the user object', async () => {
-        const mockIdDto: IdDto = { id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2' };
+        const mockIdDto: IdParamDto = {
+          id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2',
+        };
         const expectedUser = {};
         usersRepository.findOne.mockReturnValue(expectedUser);
         const user = await service.findById(mockIdDto);
@@ -52,7 +56,9 @@ describe('UsersService', () => {
     });
     describe('otherwise', () => {
       it('should throw the "NotFoundException"', async () => {
-        const mockIdDto: IdDto = { id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2' };
+        const mockIdDto: IdParamDto = {
+          id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2',
+        };
         usersRepository.findOne.mockReturnValue(undefined);
         try {
           await service.findById(mockIdDto);
@@ -95,7 +101,9 @@ describe('UsersService', () => {
   });
 
   describe('update', () => {
-    const mockIdDto: IdDto = { id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2' };
+    const mockIdDto: IdParamDto = {
+      id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2',
+    };
     const updateUser = { lastname: 'lastname' };
     describe('when user with id exists', () => {
       it('should return an updated user', async () => {
@@ -120,7 +128,9 @@ describe('UsersService', () => {
   });
 
   describe('delete', () => {
-    const mockIdDto: IdDto = { id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2' };
+    const mockIdDto: IdParamDto = {
+      id: '2d0ef3e8-c253-4c6a-97b7-fbf8953ce0a2',
+    };
     describe('when user with id exists', () => {
       it('should return a deleted user', async () => {
         const expectedUser = {};

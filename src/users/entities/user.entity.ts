@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-import { RecordEntity } from './';
+import { RecordEntity } from '@Movies/entities';
 
 @Entity()
 export class User {
@@ -35,5 +35,5 @@ export class User {
   client: boolean;
 
   @OneToMany((type) => RecordEntity, (record) => record.user)
-  record: RecordEntity[];
+  records: RecordEntity[];
 }

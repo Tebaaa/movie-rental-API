@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 
 import { JwtAuthGuard } from '@Auth/guards/';
-import { IdDto } from '@Users/dto';
 import { CorrectIdGuard } from '@Users/guards';
+import { IdParamDto } from '@Core/dtos';
 
 import { ChangePasswordDto, EmailDto, ResetPasswordDto } from '../dto/';
 import { AccountService } from '../services/';
@@ -29,7 +29,7 @@ export class AccountController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put('password/reset')
   resetPassword(
-    @Query() idDto: IdDto,
+    @Query() idDto: IdParamDto,
     @Body() resetPasswordDto: ResetPasswordDto,
   ) {
     return this.accountService.resetPassword(idDto, resetPasswordDto);
@@ -39,7 +39,7 @@ export class AccountController {
   @UseGuards(JwtAuthGuard, CorrectIdGuard)
   @Put('password/change/:id')
   changePassword(
-    @Param() idDto: IdDto,
+    @Param() idDto: IdParamDto,
     @Body() changePasswordDto: ChangePasswordDto,
   ) {
     return this.accountService.changePassword(idDto, changePasswordDto);

@@ -4,20 +4,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { FindOptions, Like } from 'typeorm';
 
 import { CreateMovieDto, QueryParamsDto, UpdateMovieDto } from '../dto/';
-import { MovieEntity } from '../entities/';
-import { TagEntity } from '../entities/';
+import { MoviesRepository, TagsRepository } from '../repositories';
 
 @Injectable()
 export class MoviesService {
   constructor(
-    @InjectRepository(MovieEntity)
-    private readonly movieRepository: Repository<MovieEntity>,
-    @InjectRepository(TagEntity)
-    private readonly tagRepository: Repository<TagEntity>,
+    private readonly movieRepository: MoviesRepository,
+    private readonly tagRepository: TagsRepository,
   ) {}
   async findAll(queryParams: QueryParamsDto) {
     const { available, tag, name, sortBy } = queryParams;
@@ -54,6 +50,7 @@ export class MoviesService {
           ...findOptionsObject,
           where: { ...whereOptions },
         };
+      //TODO: make method in repository and use pagination :)
       case findOptionsNotEmpty:
         return await this.movieRepository.find(findOptionsObject);
       default:
@@ -64,18 +61,18 @@ export class MoviesService {
         });
     }
   }
-  async findById(id: number) {
-    const movie = await this.movieRepository.findOne(id, {
-      relations: ['tags'],
-    });
+  async findById(id: string) {
+    const movie = await this.movieRepository.findOneMovieById(id);
     if (!movie) throw new NotFoundException(`Movie #${id} not found`);
     return movie;
   }
   async create(createMovieDto: CreateMovieDto) {
-    const existingMovie = await this.movieRepository.findOne({
-      name: createMovieDto.name,
-      description: createMovieDto.description,
-    });
+    const { name, description } = createMovieDto;
+    const existingMovie =
+      await this.movieRepository.findOneMovieByNameAndDescription(
+        name,
+        description,
+      );
     if (existingMovie) {
       throw new ConflictException('Movie already exists');
     }
@@ -85,7 +82,7 @@ export class MoviesService {
     const movie = this.movieRepository.create({ ...createMovieDto, tags });
     return this.movieRepository.save(movie);
   }
-  async update(id: number, updateMovieDto: UpdateMovieDto) {
+  async update(id: string, updateMovieDto: UpdateMovieDto) {
     const tags =
       updateMovieDto.tags &&
       (await Promise.all(
@@ -99,20 +96,21 @@ export class MoviesService {
     if (!movie) throw new NotFoundException(`Movie #${id} not found`);
     return this.movieRepository.save(movie);
   }
-  async delete(id: number) {
+  async delete(id: string) {
     const movie = await this.findById(id);
     return this.movieRepository.remove(movie);
   }
 
   async preloadTagByName(name: string) {
-    const existingTag = await this.tagRepository.findOne({ name });
+    const existingTag = await this.tagRepository.findOneTagByName(name);
     if (existingTag) {
       return existingTag;
     }
     throw new NotFoundException(`Tag '${name}' doesn't exist`);
   }
 
-  sortBy(sorter, findOptsObject) {
+  //TODO: check logic for sortBy method
+  sortBy(sorter: string, findOptsObject: FindOptions) {
     const sortByName = sorter === 'name';
     const sortByLikes = sorter === 'likes';
     switch (true) {

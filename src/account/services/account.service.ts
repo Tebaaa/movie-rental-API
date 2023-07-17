@@ -1,36 +1,62 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
-import { UsersService } from '@Users/services';
 import { MailService } from '@Mail/services';
-import { IdDto } from '@Users/dto';
+import { IdParamDto } from '@Core/dtos';
+import { User } from '@Users/entities';
 
 import { ChangePasswordDto, EmailDto, ResetPasswordDto } from '../dto/';
 
 @Injectable()
 export class AccountService {
   constructor(
-    private usersService: UsersService,
     private mailService: MailService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async forgotPassword(emailDto: EmailDto) {
-    const user = await this.usersService.findByEmail(emailDto.email);
+    const { email } = emailDto;
+    const [user] = await this.eventEmitter.emitAsync(
+      'users.getOneByEmail',
+      email,
+    );
+    if (!(user instanceof User)) {
+      throw new NotFoundException(`User ${email} doesn't exist`);
+    }
     return await this.mailService.sendPasswordReset(user);
   }
 
   //TODO: Use Bcrypt & regex
-  async resetPassword(idDto: IdDto, resetPasswordDto: ResetPasswordDto) {
+  async resetPassword(idDto: IdParamDto, resetPasswordDto: ResetPasswordDto) {
     const { newPassword, newPasswordConfirmation } = resetPasswordDto;
     const confirmationIsOk = newPassword === newPasswordConfirmation;
     const updatePassword = { password: newPassword };
     if (confirmationIsOk) {
-      return this.usersService.update(idDto, updatePassword);
+      return await this.eventEmitter.emitAsync(
+        'users.updateOne',
+        idDto,
+        updatePassword,
+      );
     }
     throw new ConflictException('Passwords must match');
   }
 
-  async changePassword(idDto: IdDto, changePasswordDto: ChangePasswordDto) {
-    const user = await this.usersService.findById(idDto);
+  async changePassword(
+    idDto: IdParamDto,
+    changePasswordDto: ChangePasswordDto,
+  ) {
+    const [user] = await this.eventEmitter.emitAsync(
+      'users.getOneById',
+      idDto.id,
+    );
+    if (!(user instanceof User)) {
+      throw new NotFoundException(`User not found`);
+    }
+
     const { oldPassword, newPassword, newPasswordConfirmation } =
       changePasswordDto;
     const correctOldPassword = user.password === oldPassword;
@@ -47,7 +73,11 @@ export class AccountService {
           'Your new password must be different from the old one',
         );
       default:
-        return this.usersService.update(idDto, updatePassword);
+        return await this.eventEmitter.emitAsync(
+          'users.updateOne',
+          idDto,
+          updatePassword,
+        );
     }
   }
 }

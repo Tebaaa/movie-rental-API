@@ -7,10 +7,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { RecordEntity, User } from '@Users/entities';
+import { User } from '@Users/entities';
 import { MailService } from '@Mail/services';
 
-import { MovieEntity } from '../entities/';
+import { MovieEntity, RecordEntity } from '../entities/';
 import { OrderInfo } from '../classes/';
 import { RentalActionDto } from '../dto/';
 import { IdDto } from '@Users/dto';

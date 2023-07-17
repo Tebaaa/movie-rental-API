@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { RecordEntity, User } from '@Users/entities/';
+import { User } from '@Users/entities/';
 
-import { MovieEntity, TagEntity } from './entities/';
+import { MovieEntity, RecordEntity, TagEntity } from './entities/';
 import { MoviesController } from './controllers/';
 import { MovieRentalService, MoviesService } from './services';
 

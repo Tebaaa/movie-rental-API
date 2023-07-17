@@ -8,7 +8,7 @@ import {
 } from '../../create-mock-repository.class';
 import { MailService } from '../../mail/services/mail.service';
 import { MovieEntity } from '../entities/movie.entity';
-import { RecordEntity } from '../../users/entities/record.entity';
+import { RecordEntity } from '../entities/record.entity';
 import { User } from '../../users/entities/user.entity';
 import { mockIdDto, mockUser } from '../../_test_mocks_/user-service.mock';
 import { RentalActionDto } from '../dto/rental-action.dto';

@@ -6,9 +6,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { MovieEntity } from '@Movies/entities';
+import { User } from '@Users/entities';
 
-import { User } from './';
+import { MovieEntity } from '../entities';
 
 @Entity('record')
 export class RecordEntity {

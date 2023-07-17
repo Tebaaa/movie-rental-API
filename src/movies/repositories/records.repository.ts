@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
-
-import { RecordEntity } from '@Movies/entities';
 import { InjectRepository } from '@nestjs/typeorm';
+
+import { RecordEntity } from '../entities';
 
 export class RecordsRepository extends Repository<RecordEntity> {
   constructor(

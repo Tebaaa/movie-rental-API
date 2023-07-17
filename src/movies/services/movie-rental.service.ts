@@ -9,21 +9,20 @@ import { Repository } from 'typeorm';
 
 import { User } from '@Users/entities';
 import { MailService } from '@Mail/services';
+import { IdDto } from '@Users/dto';
 
-import { MovieEntity, RecordEntity } from '../entities/';
+import { MovieEntity } from '../entities/';
 import { OrderInfo } from '../classes/';
 import { RentalActionDto } from '../dto/';
-import { IdDto } from '@Users/dto';
+import { MoviesRepository, RecordsRepository } from '../repositories';
 
 @Injectable()
 export class MovieRentalService {
   constructor(
-    @InjectRepository(RecordEntity)
-    private recordRepository: Repository<RecordEntity>,
+    private recordRepository: RecordsRepository,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    @InjectRepository(MovieEntity)
-    private moviesRepository: Repository<MovieEntity>,
+    private moviesRepository: MoviesRepository,
     private mailService: MailService,
   ) {}
 
@@ -94,15 +93,14 @@ export class MovieRentalService {
     return records;
   }
 
-  async returnMovie(user: User, moviesId: number[]) {
+  async returnMovie(user: User, moviesId: string[]) {
     const user_id = user.id;
     const records = await Promise.all(
       moviesId.map(async (movie_id) => {
-        const record = await this.recordRepository.findOne({
+        const record = await this.recordRepository.findOneRentedMovie(
           movie_id,
           user_id,
-          rent: true,
-        });
+        );
         if (record && record.rent) {
           return record;
         }
@@ -113,7 +111,7 @@ export class MovieRentalService {
     );
     const movies = await Promise.all(
       moviesId.map((id) => {
-        return this.moviesRepository.findOne(id);
+        return this.moviesRepository.findOneMovieById(id);
       }),
     );
     const updatedMovies = movies.map((movie) => {
@@ -138,7 +136,7 @@ export class MovieRentalService {
     }
     const movies = await Promise.all(
       moviesId.map(async (id) => {
-        const movie = await this.moviesRepository.findOne(id);
+        const movie = await this.moviesRepository.findOneMovieById(id);
         if (movie) {
           return movie;
         }

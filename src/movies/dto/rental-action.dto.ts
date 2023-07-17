@@ -1,11 +1,12 @@
-import { IsArray, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsString } from 'class-validator';
 
+//TODO: Make this an enum
 type ActionType = 'buy' | 'rent' | 'return';
 export class RentalActionDto {
   @IsString()
   readonly action: ActionType;
 
   @IsArray()
-  @IsNumber({}, { each: true })
-  readonly moviesId: number[];
+  @IsString({ each: true })
+  readonly moviesId: string[];
 }

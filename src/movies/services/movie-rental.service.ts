@@ -4,8 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { User } from '@Users/entities';
 import { MailService } from '@Mail/services';
@@ -20,10 +19,9 @@ import { MoviesRepository, RecordsRepository } from '../repositories';
 export class MovieRentalService {
   constructor(
     private recordRepository: RecordsRepository,
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
     private moviesRepository: MoviesRepository,
     private mailService: MailService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   getRecord(idDto: IdParamDto) {
@@ -132,8 +130,11 @@ export class MovieRentalService {
     const actionIsRent = action === 'rent';
     const actionIsReturn = action === 'return';
     //TODO: Use event emitter
-    const user = await this.userRepository.findOne(idDto.id);
-    if (!user) {
+    const [user] = await this.eventEmitter.emitAsync(
+      'users.getOneById',
+      idDto.id,
+    );
+    if (!(user instanceof User)) {
       throw new NotFoundException(`User #${idDto.id} not found`);
     }
     const movies = await Promise.all(

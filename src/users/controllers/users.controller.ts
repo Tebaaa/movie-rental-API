@@ -12,9 +12,9 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { JwtAuthGuard } from '@Auth/guards';
-import { MovieRentalService } from '@Movies/services';
 import { RentalActionDto } from '@Movies/dto';
 import { AdminGuard, ClientGuard } from '@Movies/guards';
 import { IdParamDto } from '@Core/dtos';
@@ -27,7 +27,7 @@ import { UsersService } from '../services/';
 export class UsersController {
   constructor(
     private usersService: UsersService,
-    private movieRentalService: MovieRentalService,
+    private eventEmitter: EventEmitter2,
   ) {}
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
@@ -65,7 +65,8 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, CorrectIdGuard, ClientGuard)
   @Get(':id/movies')
   async getRecord(@Param() idDto: IdParamDto) {
-    return this.movieRentalService.getRecord(idDto);
+    //TODO: check response... Remember that is always an array []
+    return await this.eventEmitter.emitAsync('movieRental.getRecord', idDto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -76,6 +77,10 @@ export class UsersController {
     @Body() rentalActionDto: RentalActionDto,
   ) {
     //TODO: create method in users service and emit an event
-    return this.movieRentalService.executeAction(idDto, rentalActionDto);
+    return await this.eventEmitter.emitAsync(
+      'movieRental.executeAction',
+      idDto,
+      rentalActionDto,
+    );
   }
 }

@@ -11,8 +11,8 @@ import { RecordEntity, TagEntity } from './';
 
 @Entity('movie')
 export class MovieEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;

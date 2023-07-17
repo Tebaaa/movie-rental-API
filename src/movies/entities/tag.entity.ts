@@ -10,8 +10,8 @@ import { MovieEntity } from './';
 
 @Entity('tag')
 export class TagEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ length: 20 })
   name: string;

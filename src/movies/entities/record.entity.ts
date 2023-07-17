@@ -12,14 +12,14 @@ import { MovieEntity } from '../entities';
 
 @Entity('record')
 export class RecordEntity {
-  @PrimaryGeneratedColumn()
-  record_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  record_id: string;
 
-  @Column()
+  @Column('uuid')
   user_id: string;
 
-  @Column()
-  movie_id: number;
+  @Column('uuid')
+  movie_id: string;
 
   //TODO: Use enum for action
   @Column({ nullable: true })
@@ -31,7 +31,7 @@ export class RecordEntity {
   @Column({ nullable: true })
   return: boolean;
 
-  @ManyToOne((type) => User, (user) => user.record)
+  @ManyToOne((type) => User, (user) => user.records)
   @JoinColumn({ name: 'user_id' })
   user: User;
 

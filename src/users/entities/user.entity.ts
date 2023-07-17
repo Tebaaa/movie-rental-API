@@ -35,5 +35,5 @@ export class User {
   client: boolean;
 
   @OneToMany((type) => RecordEntity, (record) => record.user)
-  record: RecordEntity[];
+  records: RecordEntity[];
 }

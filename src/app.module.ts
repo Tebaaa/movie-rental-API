@@ -8,7 +8,7 @@ import { UsersModule } from '@Users/users.module';
 import { MoviesModule } from '@Movies/movies.module';
 import { AuthModule } from '@Auth/auth.module';
 import { AccountModule } from '@Account/account.module';
-import { MailModule } from '@Mail/mail.module';
+// import { MailModule } from '@Mail/mail.module';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ import { MailModule } from '@Mail/mail.module';
     MoviesModule,
     AuthModule,
     AccountModule,
-    MailModule,
+    // MailModule,
   ],
 })
 export class AppModule {}

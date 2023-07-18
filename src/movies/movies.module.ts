@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { MailService } from '@Mail/services';
+// import { MailService } from '@Mail/services';
 
 import {
   MoviesRepository,
@@ -22,7 +22,7 @@ import { MoviesController } from './controllers/';
     RecordsRepository,
     MoviesRepository,
     TagsRepository,
-    MailService,
+    // MailService,
     MovieRentalListener,
   ],
 })

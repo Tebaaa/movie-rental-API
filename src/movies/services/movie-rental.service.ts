@@ -7,7 +7,7 @@ import {
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { User } from '@Users/entities';
-import { MailService } from '@Mail/services';
+// import { MailService } from '@Mail/services';
 import { IdParamDto } from '@Core/dtos';
 
 import { MovieEntity } from '../entities/';
@@ -20,7 +20,7 @@ export class MovieRentalService {
   constructor(
     private recordRepository: RecordsRepository,
     private moviesRepository: MoviesRepository,
-    private mailService: MailService,
+    // private mailService: MailService,
     private eventEmitter: EventEmitter2,
   ) {}
 
@@ -60,7 +60,7 @@ export class MovieRentalService {
         throw new ConflictException(`Movie #${id} '${name}' has no stock left`);
       }),
     );
-    await this.mailService.sendOrderInfo(orderInfo);
+    // await this.mailService.sendOrderInfo(orderInfo);
     const records = await Promise.all(
       movies.map(async (movie) => {
         return await this.addToRecord(user, movie, 'buy');
@@ -83,7 +83,7 @@ export class MovieRentalService {
         throw new ConflictException(`Movie #${id} '${name}' has no stock left`);
       }),
     );
-    await this.mailService.sendOrderInfo(orderInfo);
+    // await this.mailService.sendOrderInfo(orderInfo);
     const records = await Promise.all(
       movies.map(async (movie) => {
         return await this.addToRecord(user, movie, 'rent');

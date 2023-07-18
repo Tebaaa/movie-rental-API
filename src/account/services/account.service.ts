@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
-import { MailService } from '@Mail/services';
+// import { MailService } from '@Mail/services';
 import { IdParamDto } from '@Core/dtos';
 import { User } from '@Users/entities';
 
@@ -14,7 +14,7 @@ import { ChangePasswordDto, EmailDto, ResetPasswordDto } from '../dto/';
 @Injectable()
 export class AccountService {
   constructor(
-    private mailService: MailService,
+    // private mailService: MailService,
     private eventEmitter: EventEmitter2,
   ) {}
 
@@ -27,7 +27,7 @@ export class AccountService {
     if (!(user instanceof User)) {
       throw new NotFoundException(`User ${email} doesn't exist`);
     }
-    return await this.mailService.sendPasswordReset(user);
+    // return await this.mailService.sendPasswordReset(user);
   }
 
   //TODO: Use Bcrypt & regex

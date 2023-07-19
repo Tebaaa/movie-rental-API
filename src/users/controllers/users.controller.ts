@@ -13,6 +13,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '@Auth/guards';
 import { RentalActionDto } from '@Movies/dto';
@@ -23,6 +24,8 @@ import { CreateUserDto, UpdateUserDto } from '../dto/';
 import { CorrectIdGuard } from '../guards/';
 import { UsersService } from '../services/';
 
+@ApiTags('Users management endpoints')
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(

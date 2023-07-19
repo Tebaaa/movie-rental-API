@@ -8,6 +8,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '@Auth/guards/';
 import { CorrectIdGuard } from '@Users/guards';
@@ -16,6 +17,7 @@ import { IdParamDto } from '@Core/dtos';
 import { ChangePasswordDto, EmailDto, ResetPasswordDto } from '../dto/';
 import { AccountService } from '../services/';
 
+@ApiTags('Account management endpoints')
 @Controller('account')
 export class AccountController {
   constructor(private accountService: AccountService) {}
@@ -35,6 +37,7 @@ export class AccountController {
     return this.accountService.resetPassword(idDto, resetPasswordDto);
   }
 
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtAuthGuard, CorrectIdGuard)
   @Put('password/change/:id')

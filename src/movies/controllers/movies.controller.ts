@@ -11,6 +11,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '@Auth/guards';
 import { IdParamDto } from '@Core/dtos';
@@ -19,6 +20,8 @@ import { CreateMovieDto, QueryParamsDto, UpdateMovieDto } from '../dto/';
 import { AdminGuard } from '../guards/';
 import { MoviesService } from '../services/';
 
+@ApiTags('Movies management endpoints')
+@ApiBearerAuth()
 @Controller('movies')
 export class MoviesController {
   constructor(private moviesService: MoviesService) {}

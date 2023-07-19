@@ -23,7 +23,7 @@ export class AccountController {
   constructor(private accountService: AccountService) {}
 
   @HttpCode(HttpStatus.ACCEPTED)
-  @Put('forgot-password')
+  @Put('password/forgot')
   async sendEmail(@Body() emailDto: EmailDto) {
     return await this.accountService.forgotPassword(emailDto);
   }

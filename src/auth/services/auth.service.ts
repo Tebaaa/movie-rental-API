@@ -3,6 +3,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { JwtService } from '@nestjs/jwt';
 
 import { User } from '@Users/entities/';
+import { ICurrentUser } from '@Core/interfaces';
 
 @Injectable()
 export class AuthService {
@@ -21,14 +22,8 @@ export class AuthService {
     }
     return null;
   }
-  async login(user: User) {
-    const payload = {
-      id: user.id,
-      email: user.email,
-      admin: user.admin,
-      client: user.client,
-    };
-    return { access_token: this.jwtService.sign(payload) };
+  async login(user: ICurrentUser) {
+    return { access_token: this.jwtService.sign(user) };
   }
 
   //TODO: Save tokens in DB

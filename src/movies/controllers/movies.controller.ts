@@ -11,7 +11,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '@Auth/guards';
 import { IdParamDto } from '@Core/dtos';
@@ -26,28 +26,48 @@ import { MoviesService } from '../services/';
 export class MoviesController {
   constructor(private moviesService: MoviesService) {}
 
+  @ApiOperation({
+    description: 'Use this endpoint to get all movies',
+    summary: 'Get movies',
+  })
   @Get()
   getAll(@Query() query: QueryParamsDto) {
     return this.moviesService.findAll(query);
   }
 
+  @ApiOperation({
+    description: 'Use this endpoint to get one movie by its id',
+    summary: 'Get one movie',
+  })
   @Get(':id')
-  getById(@Param() id: IdParamDto) {
-    return this.moviesService.findById(id.id);
+  getById(@Param() { id }: IdParamDto) {
+    return this.moviesService.findById(id);
   }
 
+  @ApiOperation({
+    description: `Use this endpoint to create a movie if you're admin`,
+    summary: 'Create a movie',
+  })
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Post()
   create(@Body() createMovieDto: CreateMovieDto) {
     return this.moviesService.create(createMovieDto);
   }
 
+  @ApiOperation({
+    description: `Use this endpoint to update a movie by its id if you're admin`,
+    summary: 'Update a movie',
+  })
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Patch(':id')
   update(@Body() updateMovieDto: UpdateMovieDto, @Param() id: IdParamDto) {
     return this.moviesService.update(id.id, updateMovieDto);
   }
 
+  @ApiOperation({
+    description: `Use this endpoint to delete a movie by its id if you're admin`,
+    summary: 'Delete a movie',
+  })
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)

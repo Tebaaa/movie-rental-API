@@ -13,7 +13,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '@Auth/guards';
 import { RentalActionDto } from '@Movies/dto';
@@ -32,18 +32,31 @@ export class UsersController {
     private usersService: UsersService,
     private eventEmitter: EventEmitter2,
   ) {}
+
+  @ApiOperation({
+    description: 'Use this endpoint to get all users',
+    summary: 'Get all users',
+  })
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
   getAll() {
     return this.usersService.findAll();
   }
 
+  @ApiOperation({
+    description: 'Use this endpoint to get one user by its Id',
+    summary: 'Get one user',
+  })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  getById(@Param() idDto: IdParamDto) {
-    return this.usersService.findById(idDto.id);
+  getById(@Param() { id }: IdParamDto) {
+    return this.usersService.findById(id);
   }
 
+  @ApiOperation({
+    summary: 'Create user',
+    description: 'Use this endpoint to create an user',
+  })
   @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Post()
@@ -51,6 +64,10 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @ApiOperation({
+    description: 'Use this endpoint to update an user by its Id',
+    summary: 'Update user',
+  })
   @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Patch(':id')
@@ -58,6 +75,10 @@ export class UsersController {
     return this.usersService.update(idDto.id, updateUserDto);
   }
 
+  @ApiOperation({
+    description: 'Use this endpoint to delete an user by its Id',
+    summary: 'Delete user',
+  })
   @Delete(':id')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -65,6 +86,11 @@ export class UsersController {
     return this.usersService.delete(idDto.id);
   }
 
+  @ApiOperation({
+    description:
+      'Use this endpoint to get all movies that belongs to an user by its Id',
+    summary: `Get user's movies`,
+  })
   @UseGuards(JwtAuthGuard, CorrectIdGuard, ClientGuard)
   @Get(':id/movies')
   async getRecord(@Param() idDto: IdParamDto) {
@@ -72,6 +98,10 @@ export class UsersController {
     return await this.eventEmitter.emitAsync('movieRental.getRecord', idDto);
   }
 
+  @ApiOperation({
+    summary: 'Do an action to movies',
+    description: `Use this endpoint to rent, buy or return movies`,
+  })
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtAuthGuard, CorrectIdGuard, ClientGuard)
   @Post(':id/movies')
